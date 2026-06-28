@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@/test/utils/testUtils'
 import { PropertyCard } from './PropertyCard'
 
-// Mock data for testing
 const mockProperty = {
   propertyId: 'prop-1',
   title: 'Test Property',
@@ -38,14 +37,12 @@ describe('PropertyCard', () => {
   it('renders property details', () => {
     render(<PropertyCard property={mockProperty} />)
 
-    // Title appears as heading
+    // Use heading role to avoid ambiguity
     expect(screen.getByRole('heading', { name: mockProperty.title })).toBeInTheDocument()
     expect(screen.getByText(mockProperty.area)).toBeInTheDocument()
-
-    // Price matches "Rs 5,000,000"
     expect(screen.getByText(/5,000,000/)).toBeInTheDocument()
 
-    // "120 sq yd" appears multiple times – use getAllByText
+    // "120 sq yd" now appears twice — use getAllByText to avoid the error
     const sizeElements = screen.getAllByText(/120 sq yd/i)
     expect(sizeElements.length).toBeGreaterThanOrEqual(1)
   })
