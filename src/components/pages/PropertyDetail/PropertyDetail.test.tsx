@@ -25,10 +25,7 @@ vi.mock('react-router-dom', async () => {
   return { ...actual, useParams: () => ({ slug: 'test-property' }) }
 })
 
-vi.mock('react-redux', () => ({
-  useDispatch: () => vi.fn(),
-  useSelector: vi.fn(),
-}))
+// ❌ REMOVED: vi.mock('react-redux') – not needed, breaks the Provider in testUtils
 
 const mockProperty = {
   propertyId: 'prop-1',
@@ -80,7 +77,6 @@ describe('PropertyDetail', () => {
     render(<PropertyDetail />)
 
     await waitFor(() => {
-      // Target the <h1> to avoid breadcrumb duplication
       const heading = screen.getByRole('heading', { level: 1, name: mockProperty.title })
       expect(heading).toBeInTheDocument()
       expect(screen.getByText(/Test Agent/i)).toBeInTheDocument()
@@ -98,7 +94,6 @@ describe('PropertyDetail', () => {
       const nameInput = screen.getByLabelText(/Full Name/i)
       expect(nameInput).toBeInTheDocument()
 
-      // Use placeholder instead of label to avoid AgentCard "Email" button conflict
       const emailInput = screen.getByPlaceholderText(/ali@example.com/i)
       expect(emailInput).toBeInTheDocument()
     })
