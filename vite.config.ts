@@ -8,14 +8,12 @@ export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
   const isStaging = mode === 'staging';
 
-  // Environment variables exposed via import.meta.env (only VITE_ prefixed)
   const envDefine = {
     'import.meta.env.VITE_APP_VERSION': JSON.stringify(
       process.env.npm_package_version || '1.0.0'
     ),
   };
 
-  // Conditionally add bundle visualizer for analysis
   const plugins: PluginOption[] = [react()];
   if (isProduction && process.env.ANALYZE === 'true') {
     plugins.push(
@@ -28,28 +26,26 @@ export default defineConfig(({ mode }) => {
     );
   }
 
-  // Advanced manual chunks for optimal code splitting
+  // Keep the chunk splitting simpler – only separate heavy libraries
   function manualChunks(id: string) {
     if (id.includes('node_modules')) {
-      if (
-        id.includes('/react/') ||
-        id.includes('/react-dom/') ||
-        id.includes('/react-router-dom/')
-      ) {
-        return 'react-core';
-      }
+      // Firebase
       if (id.includes('/firebase/')) {
         return 'firebase';
       }
+      // Radix UI primitives
       if (id.includes('/@radix-ui/')) {
         return 'radix-ui';
       }
+      // Icons
       if (id.includes('/lucide-react/')) {
         return 'icons';
       }
+      // Animation
       if (id.includes('/framer-motion/')) {
         return 'animations';
       }
+      // State management
       if (
         id.includes('/@reduxjs/') ||
         id.includes('/react-redux/') ||
@@ -57,6 +53,7 @@ export default defineConfig(({ mode }) => {
       ) {
         return 'state';
       }
+      // Forms & validation
       if (
         id.includes('/react-hook-form/') ||
         id.includes('/zod/') ||
@@ -64,6 +61,7 @@ export default defineConfig(({ mode }) => {
       ) {
         return 'form';
       }
+      // Utility / styling
       if (
         id.includes('/clsx/') ||
         id.includes('/class-variance-authority/') ||
@@ -71,8 +69,8 @@ export default defineConfig(({ mode }) => {
       ) {
         return 'utils';
       }
-      return 'vendor';
     }
+    // Everything else (including React & React DOM) stays together
   }
 
   return {
@@ -108,7 +106,6 @@ export default defineConfig(({ mode }) => {
       open: true,
       cors: true,
       headers: {
-        // Allow cross-origin popups for Firebase Auth (Google Sign-In)
         'Cross-Origin-Opener-Policy': 'unsafe-none',
       },
     },
