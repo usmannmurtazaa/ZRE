@@ -1,37 +1,66 @@
-import { render, screen, fireEvent } from '@/test/utils/testUtils'
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@/test/utils/testUtils'
 import { PropertyCard } from './PropertyCard'
-import { mockProperty } from '@/test/mocks/firestoreMocks'
-import type { Property } from '@/types'
 
-// Ensure correct types for testing
-const propertyWithImages = {
-  ...mockProperty,
+// Mock data for testing
+const mockProperty = {
+  propertyId: 'prop-1',
+  title: 'Test Property',
+  slug: 'test-property',
+  description: 'A test property for unit tests',
   type: 'residential' as const,
   subtype: 'plot' as const,
   status: 'for_sale' as const,
+  price: 5000000,
+  sizeSqYds: 120,
+  features: ['corner'],
+  address: '123 Test Street',
+  area: 'Test Area',
+  areaId: 'area-1',
+  agentId: 'agent-1',
+  agentName: 'Test Agent',
+  contactPhone: '03001234567',
+  contactEmail: 'test@example.com',
   images: [{ url: 'test.jpg', alt: 'Test', isMain: true, order: 0 }],
-} as unknown as Property
+  isFeatured: false,
+  isActive: true,
+  views: 0,
+  inquiries: 0,
+  favorites: 0,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  publishedAt: new Date(),
+}
+
+const featuredProp = { ...mockProperty, isFeatured: true }
 
 describe('PropertyCard', () => {
   it('renders property details', () => {
-    render(<PropertyCard property={propertyWithImages} />)
-    expect(screen.getByText(mockProperty.title)).toBeInTheDocument()
+    render(<PropertyCard property={mockProperty} />)
+
+    // Title appears as heading
+    expect(screen.getByRole('heading', { name: mockProperty.title })).toBeInTheDocument()
     expect(screen.getByText(mockProperty.area)).toBeInTheDocument()
+
+    // Price matches "Rs 5,000,000"
     expect(screen.getByText(/5,000,000/)).toBeInTheDocument()
-    expect(screen.getByText('120 sq yd')).toBeInTheDocument()
+
+    // "120 sq yd" appears multiple times – use getAllByText
+    const sizeElements = screen.getAllByText(/120 sq yd/i)
+    expect(sizeElements.length).toBeGreaterThanOrEqual(1)
   })
 
   it('shows featured badge when featured', () => {
-    const featuredProp = { ...propertyWithImages, isFeatured: true } as unknown as Property
     render(<PropertyCard property={featuredProp} />)
-    expect(screen.getByText('Featured')).toBeInTheDocument()
+    expect(screen.getByText(/featured/i)).toBeInTheDocument()
   })
 
-  it('calls onSave when save button clicked', () => {
+  it('calls onSave when save button clicked', async () => {
     const onSave = vi.fn()
-    render(<PropertyCard property={propertyWithImages} onSave={onSave} />)
-    const saveButton = screen.getByRole('button', { name: /save/i })
-    fireEvent.click(saveButton)
-    expect(onSave).toHaveBeenCalledWith(mockProperty.propertyId)
+    const { user } = render(<PropertyCard property={mockProperty} onSave={onSave} />)
+
+    const saveButton = screen.getByLabelText(/save property/i)
+    await user.click(saveButton)
+    expect(onSave).toHaveBeenCalledWith('prop-1')
   })
 })
