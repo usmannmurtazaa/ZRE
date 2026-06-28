@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+  http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+>
+  <!--
+    Sitemap for Zain Real Estate
+    Last updated: 2026-06-27
+    This sitemap is manually maintained; individual property and area pages
+    are added automatically during build/deployment via dynamic generation.
+    For any new static page, add a <url> entry below.
+  -->
+
+  <!-- Home Page -->
+  <url>
+    <loc>https://zainrealestate.netlify.app/</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Properties Listing -->
+  <url>
+    <loc>https://zainrealestate.netlify.app/properties</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Areas Listing -->
+  <url>
+    <loc>https://zainrealestate.netlify.app/areas</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://zainrealestate.netlify.app/about</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Contact Page -->
+  <url>
+    <loc>https://zainrealestate.netlify.app/contact</loc>
+    <lastmod>2026-06-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!--
+    Dynamic pages (properties &amp; areas) will be appended during build:
+    <url>
+      <loc>https://zainrealestate.netlify.app/properties/{slug}</loc>
+      <lastmod>YYYY-MM-DD</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.8</priority>
+    </url>
+  -->
+</urlset>

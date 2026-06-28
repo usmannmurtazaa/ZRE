@@ -1,0 +1,118 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper Functions ────────────────────────────────────────────
+    /**
+     * Returns true if the requesting user exists and has the "admin" role.
+     */
+    function isAdmin() {
+      return request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    /**
+     * Returns true if the requesting user is the agent assigned to a document,
+     * AND their role is 'agent'.
+     * `existingAgentId` is the value of the `agentId` field on the *existing* document.
+     * For creates, pass the field from `request.resource.data.agentId`.
+     */
+    function isAgent(agentId) {
+      return request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'agent'
+        && request.auth.uid == agentId;
+    }
+
+    /**
+     * Returns true if the requesting user owns the user‑specific document.
+     */
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // ── Users ──────────────────────────────────────────────────────
+    match /users/{userId} {
+      // Any authenticated user can read any user's basic info (needed for agent names etc.)
+      allow read: if request.auth != null;
+
+      // A user can only create their own profile document
+      allow create: if request.auth != null && request.auth.uid == userId;
+
+      // Only admins or the user themselves can update/delete their own document
+      allow update, delete: if isAdmin() || isOwner(userId);
+    }
+
+    // ── Properties ─────────────────────────────────────────────────
+    match /properties/{propertyId} {
+      // Anyone (even unauthenticated) can read an active property.
+      // Admins and assigned agents can also read inactive properties.
+      allow read: if resource.data.isActive == true
+                  || isAdmin()
+                  || isAgent(resource.data.agentId);
+
+      // Authenticated users can create a property if they are admin or the assigned agent.
+      // (During creation, resource is null, so we use request.resource for validation.)
+      allow create: if request.auth != null
+                    && (isAdmin() || isAgent(request.resource.data.agentId));
+
+      // Only admins or the assigned agent can update / delete.
+      allow update, delete: if isAdmin() || isAgent(resource.data.agentId);
+    }
+
+ // ── Leads ──────────────────────────────────────────────────────
+match /leads/{leadId} {
+  // Admins can read everything.
+  // Any authenticated user can read leads where they are the assigned agent.
+  allow read: if isAdmin()
+              || (request.auth != null && request.auth.uid == resource.data.agentId);
+
+  // Anyone (even unauthenticated) can create a lead (for public contact forms).
+  allow create: if true;
+
+  // Only admins or the assigned agent can update a lead.
+  allow update: if isAdmin()
+                 || (request.auth != null && request.auth.uid == resource.data.agentId);
+
+  // Only admins can permanently delete a lead.
+  allow delete: if isAdmin();
+}
+
+    // ── Areas ──────────────────────────────────────────────────────
+    match /areas/{areaId} {
+      // Anyone can read active areas; admins can also read inactive ones.
+      allow read: if resource.data.isActive == true || isAdmin();
+
+      // Only admins can modify areas.
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ── Testimonials ───────────────────────────────────────────────
+    match /testimonials/{testimonialId} {
+      // Public can read published testimonials; admins can read all.
+      allow read: if resource.data.isPublished == true || isAdmin();
+
+      // Only admins can create, update, or delete testimonials.
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ── Settings ───────────────────────────────────────────────────
+    match /settings/{settingId} {
+      // Settings are public (read‑only).
+      allow read: if true;
+
+      // Only admins can modify settings.
+      allow write: if isAdmin();
+    }
+
+    // ── User Sub‑Collections ───────────────────────────────────────
+    match /users/{userId}/favorites/{favId} {
+      // Only the user themselves can read/write their favorites.
+      allow read, write: if isOwner(userId);
+    }
+
+    // Optional: Saved searches (if implemented)
+    match /users/{userId}/savedSearches/{searchId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}

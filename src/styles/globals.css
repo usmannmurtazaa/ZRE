@@ -1,0 +1,442 @@
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   Zain Real Estate – Navy / Gold / Lavender Blue Luxury Tokens
+   Refined typography system (see tokens/typography.ts)
+   ================================================================ */
+
+@layer base {
+  :root {
+    /* ── Surface & Base ───────────────────────────────────────── */
+    --background: 0 0% 100%;
+    --foreground: 218 32% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 218 32% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 32% 15%;
+
+    --primary: 217 68% 14%; /* #0B1D3A — deep navy */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 225 54% 97%;
+    --secondary-foreground: 217 68% 14%;
+
+    --muted: 220 23% 95%;
+    --muted-foreground: 223 14% 36%;
+
+    --accent: 42 40% 61%; /* #C6A972 — signature gold */
+    --accent-foreground: 217 68% 14%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 20% 90%;
+    --input: 222 20% 90%;
+    --ring: 42 40% 61%;
+
+    --radius: 0.625rem;
+
+    /* ── Brand Palette (Deep Navy Blue) ───────────────────────── */
+    --brand-50: 225 50% 95%;
+    --brand-100: 219 54% 89%;
+    --brand-200: 218 55% 78%;
+    --brand-300: 220 53% 66%;
+    --brand-400: 220 50% 53%;
+    --brand-500: 217 68% 14%;
+    --brand-600: 217 68% 11%;
+    --brand-700: 217 68% 9%;
+    --brand-800: 217 73% 6%;
+    --brand-900: 217 78% 4%;
+    --brand-950: 220 82% 2%;
+
+    /* ── Gold Accent Palette ──────────────────────────────────── */
+    --gold-50: 42 50% 97%;
+    --gold-100: 42 45% 90%;
+    --gold-200: 42 43% 80%;
+    --gold-300: 42 41% 68%;
+    --gold-400: 42 40% 64%;
+    --gold-500: 42 40% 61%;
+    --gold-600: 39 38% 48%;
+    --gold-700: 37 36% 38%;
+    --gold-800: 36 34% 28%;
+    --gold-900: 35 32% 19%;
+    --gold-950: 34 30% 10%;
+
+    /* ── Lavender Blue Accent Palette ─────────────────────────── */
+    --lavender-50: 225 54% 97%;
+    --lavender-100: 224 48% 94%;
+    --lavender-200: 224 51% 88%;
+    --lavender-300: 224 52% 79%;
+    --lavender-400: 226 50% 70%;
+    --lavender-500: 219 26% 59%;
+    --lavender-600: 220 24% 51%;
+    --lavender-700: 220 28% 42%;
+    --lavender-800: 219 31% 33%;
+    --lavender-900: 218 37% 24%;
+    --lavender-950: 223 40% 16%;
+
+    /* ── Fresh Green Palette ──────────────────────────────────── */
+    --green-50: 124 38% 96%;
+    --green-100: 124 35% 88%;
+    --green-200: 124 33% 76%;
+    --green-300: 124 30% 64%;
+    --green-400: 123 28% 52%;
+    --green-500: 123 46% 34%;
+    --green-600: 123 48% 29%;
+    --green-700: 123 50% 24%;
+    --green-800: 123 52% 18%;
+    --green-900: 123 54% 13%;
+    --green-950: 123 56% 8%;
+
+    /* ── Neutral Scale ────────────────────────────────────────── */
+    --neutral-50: 220 27% 98%;
+    --neutral-100: 220 23% 95%;
+    --neutral-200: 222 20% 90%;
+    --neutral-300: 220 18% 83%;
+    --neutral-400: 222 15% 67%;
+    --neutral-500: 225 11% 49%;
+    --neutral-600: 223 14% 36%;
+    --neutral-700: 224 16% 27%;
+    --neutral-800: 222 22% 18%;
+    --neutral-900: 218 32% 15%;
+    --neutral-950: 215 36% 9%;
+
+    /* ── Semantic Colors ──────────────────────────────────────── */
+    --success: 142 72% 45%;
+    --success-light: 142 72% 95%;
+    --success-dark: 142 72% 20%;
+
+    --warning: 36 100% 50%;
+    --warning-light: 36 100% 95%;
+    --warning-dark: 36 100% 20%;
+
+    --error: 0 84% 60%;
+    --error-light: 0 84% 95%;
+    --error-dark: 0 84% 25%;
+
+    --info: 217 91% 60%;
+    --info-light: 217 91% 95%;
+    --info-dark: 217 91% 25%;
+
+    /* ── Surface & Subtle ─────────────────────────────────────── */
+    --surface: 220 27% 98%;
+    --surface-foreground: 218 32% 15%;
+
+    --subtle: 220 23% 95%;
+
+    /* ── Typography Tokens (mapped from tokens/typography.ts) ─── */
+    --font-sans:
+      'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-serif: 'Forum', Georgia, 'Times New Roman', serif;
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+    /* Modular scale sizes */
+    --text-4xs: 0.625rem;
+    --text-3xs: 0.75rem;
+    --text-2xs: 0.875rem;
+    --text-xs: 1rem;
+    --text-sm: 1.125rem;
+    --text-base: 1.25rem;
+    --text-lg: 1.5rem;
+    --text-xl: 1.875rem;
+    --text-2xl: 2.25rem;
+    --text-3xl: 3rem;
+    --text-4xl: 3.75rem;
+    --text-5xl: 4.5rem;
+    --text-6xl: 6rem;
+
+    /* Line heights */
+    --leading-none: 1;
+    --leading-tight: 1.1;
+    --leading-snug: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 2;
+
+    /* Letter spacing */
+    --tracking-tighter: -0.05em;
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+
+    /* ── Border Radius ────────────────────────────────────────── */
+    --radius-xs: 0.125rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-full: 9999px;
+
+    /* ── Shadows ──────────────────────────────────────────────── */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 10px 30px -10px rgb(0 0 0 / 0.1);
+    --shadow-glow: 0 0 0 3px rgba(198, 169, 114, 0.25);
+    --shadow-button: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 2px 6px -1px rgb(0 0 0 / 0.04);
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.04);
+
+    /* ── Skeleton Loader ──────────────────────────────────────── */
+    --skeleton-start: hsl(var(--muted));
+    --skeleton-end: hsl(var(--muted-foreground) / 0.3);
+  }
+
+  /* ── Dark Theme ──────────────────────────────────────────────── */
+  .dark {
+    --background: 217 68% 6%;
+    --foreground: 220 27% 90%;
+
+    --card: 217 68% 9%;
+    --card-foreground: 220 27% 90%;
+
+    --popover: 217 68% 9%;
+    --popover-foreground: 220 27% 90%;
+
+    --primary: 42 40% 61%;
+    --primary-foreground: 217 68% 6%;
+
+    --secondary: 222 22% 18%;
+    --secondary-foreground: 220 27% 90%;
+
+    --muted: 222 22% 18%;
+    --muted-foreground: 222 15% 67%;
+
+    --accent: 219 26% 30%;
+    --accent-foreground: 220 27% 95%;
+
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 5%;
+
+    --border: 224 16% 27%;
+    --input: 224 16% 27%;
+    --ring: 42 40% 61%;
+
+    --surface: 217 68% 9%;
+    --surface-foreground: 220 27% 90%;
+    --subtle: 222 22% 14%;
+
+    /* Brand (inverted) */
+    --brand-50: 220 27% 8%;
+    --brand-100: 220 27% 12%;
+    --brand-200: 220 27% 20%;
+    --brand-300: 220 27% 34%;
+    --brand-400: 220 27% 48%;
+    --brand-500: 220 27% 25%;
+    --brand-600: 220 27% 35%;
+    --brand-700: 220 27% 50%;
+    --brand-800: 220 27% 65%;
+    --brand-900: 220 27% 85%;
+    --brand-950: 220 27% 95%;
+
+    /* Gold (inverted) */
+    --gold-50: 42 40% 8%;
+    --gold-100: 42 40% 12%;
+    --gold-200: 42 40% 20%;
+    --gold-300: 42 40% 34%;
+    --gold-400: 42 40% 48%;
+    --gold-500: 42 40% 61%;
+    --gold-600: 42 40% 55%;
+    --gold-700: 42 40% 45%;
+    --gold-800: 42 40% 35%;
+    --gold-900: 42 40% 25%;
+    --gold-950: 42 40% 15%;
+
+    /* Lavender (inverted) */
+    --lavender-50: 223 40% 8%;
+    --lavender-100: 223 40% 12%;
+    --lavender-200: 223 40% 20%;
+    --lavender-300: 223 40% 30%;
+    --lavender-400: 223 40% 42%;
+    --lavender-500: 219 26% 59%;
+    --lavender-600: 219 26% 52%;
+    --lavender-700: 219 26% 44%;
+    --lavender-800: 219 26% 35%;
+    --lavender-900: 219 26% 26%;
+    --lavender-950: 219 26% 18%;
+
+    /* Green (inverted) */
+    --green-50: 123 46% 8%;
+    --green-100: 123 46% 12%;
+    --green-200: 123 46% 18%;
+    --green-300: 123 46% 26%;
+    --green-400: 123 46% 38%;
+    --green-500: 142 72% 45%;
+    --green-600: 142 72% 52%;
+    --green-700: 142 72% 42%;
+    --green-800: 142 72% 32%;
+    --green-900: 142 72% 22%;
+    --green-950: 142 72% 14%;
+
+    /* Neutral (inverted) */
+    --neutral-50: 215 36% 8%;
+    --neutral-100: 215 36% 12%;
+    --neutral-200: 215 36% 18%;
+    --neutral-300: 215 36% 25%;
+    --neutral-400: 215 36% 40%;
+    --neutral-500: 215 36% 50%;
+    --neutral-600: 215 36% 62%;
+    --neutral-700: 215 36% 75%;
+    --neutral-800: 215 36% 85%;
+    --neutral-900: 215 36% 90%;
+    --neutral-950: 215 36% 95%;
+
+    /* Semantic (brightened) */
+    --success: 142 72% 50%;
+    --success-light: 142 72% 15%;
+    --success-dark: 142 72% 80%;
+
+    --warning: 36 100% 55%;
+    --warning-light: 36 100% 15%;
+    --warning-dark: 36 100% 85%;
+
+    --error: 0 84% 65%;
+    --error-light: 0 84% 15%;
+    --error-dark: 0 84% 85%;
+
+    --info: 217 91% 65%;
+    --info-light: 217 91% 15%;
+    --info-dark: 217 91% 85%;
+
+    /* Skeleton */
+    --skeleton-start: hsl(var(--muted));
+    --skeleton-end: hsl(var(--muted-foreground) / 0.3);
+  }
+
+  /* ── Base Styles ──────────────────────────────────────────────── */
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth antialiased;
+    font-family: var(--font-sans);
+    font-size: 16px; /* set base size explicitly for rem calculations */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-size: var(--text-xs); /* 1rem → 16px base */
+    line-height: var(--leading-relaxed); /* 1.625 */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif);
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+  h2 {
+    font-size: var(--text-2xl);
+    line-height: var(--leading-tight);
+  }
+  h3 {
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+  }
+  h4 {
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+  }
+  h5 {
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+  }
+  h6 {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring rounded-sm;
+  }
+
+  .skip-to-content {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    z-index: 9999;
+    padding: 0.75rem 1.5rem;
+    background: hsl(var(--brand-500));
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 0 0 0.5rem 0;
+    transition: top 0.2s;
+  }
+  .skip-to-content:focus {
+    top: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) hsl(var(--muted));
+  }
+}
+
+@layer components {
+  .container-premium {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}

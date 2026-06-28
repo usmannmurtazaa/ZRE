@@ -87,7 +87,7 @@
 git clone https://github.com/usmanmurtaza/zain-real-estate.git
 cd zain-real-estate
 ```
-````
+
 
 ### 2. Install dependencies
 
@@ -193,4 +193,3 @@ This project is proprietary and built exclusively for **Zain Real Estate**.
 <p align="center">
   <sub>Built with ❤️, TypeScript, and a lot of ☕</sub>
 </p>
-```
