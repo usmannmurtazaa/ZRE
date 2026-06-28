@@ -1,35 +1,27 @@
 [build]
   command = "npm run build"
   publish = "dist"
-  environment = {
-    NODE_VERSION = "20"
-  }
 
 [build.environment]
+  NODE_VERSION = "20"
   VITE_APP_URL = "https://zainrealestate.netlify.app"
 
-[context.production]
-  environment = {
-    VITE_APP_URL = "https://zainrealestate.netlify.app"
-  }
+[context.production.environment]
+  VITE_APP_URL = "https://zainrealestate.netlify.app"
 
-[context.staging]
-  environment = {
-    VITE_APP_URL = "https://staging.zainrealestate.netlify.app"
-  }
+[context.staging.environment]
+  VITE_APP_URL = "https://staging--zainrealestate.netlify.app"
 
-[context.deploy-preview]
-  environment = {
-    VITE_APP_URL = "https://deploy-preview-${PR_NUMBER}--zainrealestate.netlify.app"
-  }
+[context.deploy-preview.environment]
+  VITE_APP_URL = "https://deploy-preview-${PR_NUMBER}--zainrealestate.netlify.app"
 
-# Redirect rules for SPA
+# ── SPA redirect ──────────────────────────────────────────────────────
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Caching headers for static assets
+# ── Asset caching ─────────────────────────────────────────────────────
 [[headers]]
   for = "/assets/*"
   [headers.values]
@@ -40,7 +32,7 @@
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
 
-# Security headers
+# ── Security headers ──────────────────────────────────────────────────
 [[headers]]
   for = "/*"
   [headers.values]
