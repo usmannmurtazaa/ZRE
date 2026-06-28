@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@/test/utils/testUtils'
+import userEvent from '@testing-library/user-event'
 import { PropertyCard } from './PropertyCard'
 
+// Mock data
 const mockProperty = {
   propertyId: 'prop-1',
   title: 'Test Property',
@@ -42,7 +44,7 @@ describe('PropertyCard', () => {
     expect(screen.getByText(mockProperty.area)).toBeInTheDocument()
     expect(screen.getByText(/5,000,000/)).toBeInTheDocument()
 
-    // "120 sq yd" now appears twice — use getAllByText to avoid the error
+    // "120 sq yd" appears twice – use getAllByText to avoid multiple elements error
     const sizeElements = screen.getAllByText(/120 sq yd/i)
     expect(sizeElements.length).toBeGreaterThanOrEqual(1)
   })
@@ -54,10 +56,10 @@ describe('PropertyCard', () => {
 
   it('calls onSave when save button clicked', async () => {
     const onSave = vi.fn()
-    const { user } = render(<PropertyCard property={mockProperty} onSave={onSave} />)
+    render(<PropertyCard property={mockProperty} onSave={onSave} />)
 
     const saveButton = screen.getByLabelText(/save property/i)
-    await user.click(saveButton)
+    await userEvent.click(saveButton)
     expect(onSave).toHaveBeenCalledWith('prop-1')
   })
 })
