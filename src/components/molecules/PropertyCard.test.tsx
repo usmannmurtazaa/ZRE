@@ -42,7 +42,7 @@ describe('PropertyCard', () => {
     expect(screen.getByText(mockProperty.area)).toBeInTheDocument()
     expect(screen.getByText(/5,000,000/)).toBeInTheDocument()
 
-    // "120 sq yd" appears twice – use getAllByText
+    // "120 sq yd" appears twice – use getAllByText to avoid the error
     const sizeElements = screen.getAllByText(/120 sq yd/i)
     expect(sizeElements.length).toBeGreaterThanOrEqual(1)
   })
