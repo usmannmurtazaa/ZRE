@@ -1,6 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@/test/utils/testUtils'
 import { PropertyDetail } from './PropertyDetail'
+import React from 'react'
+
+// Mock Framer Motion to avoid jsdom errors
+vi.mock('framer-motion', () => ({
+  motion: new Proxy({}, {
+    get: () => {
+      return React.forwardRef(({ children, ...rest }: any, ref: any) => {
+        const { initial, animate, exit, whileHover, whileTap, variants, ...htmlProps } = rest
+        const Tag = 'div'
+        return React.createElement(Tag, { ...htmlProps, ref }, children)
+      })
+    },
+  }),
+  AnimatePresence: ({ children }: any) => children,
+}))
 
 vi.mock('@/hooks/useProperties', () => ({
   usePropertyBySlug: vi.fn(),
@@ -24,8 +39,6 @@ vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
   return { ...actual, useParams: () => ({ slug: 'test-property' }) }
 })
-
-// ❌ REMOVED: vi.mock('react-redux') – not needed, breaks the Provider in testUtils
 
 const mockProperty = {
   propertyId: 'prop-1',
