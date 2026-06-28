@@ -80,7 +80,7 @@ describe('PropertyDetail', () => {
     render(<PropertyDetail />)
 
     await waitFor(() => {
-      // Target the <h1> specifically to avoid breadcrumb duplication
+      // Target the <h1> to avoid breadcrumb duplication
       const heading = screen.getByRole('heading', { level: 1, name: mockProperty.title })
       expect(heading).toBeInTheDocument()
       expect(screen.getByText(/Test Agent/i)).toBeInTheDocument()
@@ -98,7 +98,7 @@ describe('PropertyDetail', () => {
       const nameInput = screen.getByLabelText(/Full Name/i)
       expect(nameInput).toBeInTheDocument()
 
-      // Instead of "Email" which matches both input and agent button, use the email input's placeholder
+      // Use placeholder instead of label to avoid AgentCard "Email" button conflict
       const emailInput = screen.getByPlaceholderText(/ali@example.com/i)
       expect(emailInput).toBeInTheDocument()
     })

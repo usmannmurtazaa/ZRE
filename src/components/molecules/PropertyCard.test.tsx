@@ -3,7 +3,6 @@ import { render, screen } from '@/test/utils/testUtils'
 import userEvent from '@testing-library/user-event'
 import { PropertyCard } from './PropertyCard'
 
-// Mock data
 const mockProperty = {
   propertyId: 'prop-1',
   title: 'Test Property',
@@ -39,12 +38,11 @@ describe('PropertyCard', () => {
   it('renders property details', () => {
     render(<PropertyCard property={mockProperty} />)
 
-    // Use heading role to avoid ambiguity
     expect(screen.getByRole('heading', { name: mockProperty.title })).toBeInTheDocument()
     expect(screen.getByText(mockProperty.area)).toBeInTheDocument()
     expect(screen.getByText(/5,000,000/)).toBeInTheDocument()
 
-    // "120 sq yd" appears twice – use getAllByText to avoid multiple elements error
+    // "120 sq yd" appears twice – use getAllByText
     const sizeElements = screen.getAllByText(/120 sq yd/i)
     expect(sizeElements.length).toBeGreaterThanOrEqual(1)
   })
