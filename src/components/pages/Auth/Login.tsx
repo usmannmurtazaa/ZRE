@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/hooks/useAuth'
-import { signInWithEmailAndPassword, signInWithRedirect, getRedirectResult } from 'firebase/auth'
-import { auth, googleProvider } from '@/config/firebase'
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { auth } from '@/config/firebase'
 import { Seo } from '@/components/atoms/Seo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { Mail, Lock, LogIn, AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Mail, Lock, LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -17,7 +17,7 @@ const fadeUp = {
 }
 
 export const Login = () => {
-  const { user, loading: authLoading } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -25,31 +25,11 @@ export const Login = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // If already authenticated, go to home
   useEffect(() => {
-    if (user && !authLoading) {
+    if (user) {
       navigate('/', { replace: true })
     }
-  }, [user, authLoading, navigate])
-
-  // Handle the Google redirect result when the page loads
-  useEffect(() => {
-    const handleRedirect = async () => {
-      try {
-        const result = await getRedirectResult(auth)
-        if (result) {
-          // User signed in after redirect – the AuthProvider will pick it up
-          console.log('[Login] Google redirect sign-in succeeded')
-        } else {
-          console.log('[Login] No pending redirect result')
-        }
-      } catch (err: any) {
-        console.error('[Login] Redirect sign-in error:', err)
-        setError(err.message || 'Google sign-in failed')
-      }
-    }
-    handleRedirect()
-  }, [])
+  }, [user, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -57,7 +37,7 @@ export const Login = () => {
     setError(null)
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      // navigation will happen via the first useEffect
+      navigate('/', { replace: true })
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -68,29 +48,20 @@ export const Login = () => {
   const handleGoogleLogin = async () => {
     setError(null)
     try {
-      await signInWithRedirect(auth, googleProvider)
-      // The page will redirect to Google; we come back after
+      const provider = new GoogleAuthProvider()
+      provider.setCustomParameters({ prompt: 'select_account' })
+      await signInWithPopup(auth, provider)
+      navigate('/', { replace: true })
     } catch (err: any) {
-      setError(err.message)
+      if (err.code !== 'auth/popup-closed-by-user') {
+        setError(err.message)
+      }
     }
-  }
-
-  // Show a loading screen while auth is initialising
-  if (authLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center space-y-4">
-          <Loader2 className="mx-auto h-10 w-10 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">Checking login status…</p>
-        </div>
-      </div>
-    )
   }
 
   return (
     <>
       <Seo title="Sign In" description="Log in to your Zain Real Estate account" noindex nofollow />
-
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4 sm:px-6 lg:px-8 py-12">
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -100,7 +71,6 @@ export const Login = () => {
             backgroundSize: '24px 24px',
           }}
         />
-
         <motion.div
           initial="hidden"
           animate="visible"
@@ -120,7 +90,6 @@ export const Login = () => {
               </span>
             </Link>
           </motion.div>
-
           <motion.div
             variants={fadeUp}
             className="rounded-2xl border border-border bg-card shadow-card p-8"
@@ -129,7 +98,6 @@ export const Login = () => {
             <p className="text-sm text-muted-foreground mb-8">
               Sign in to access your dashboard and inquiries.
             </p>
-
             <AnimatePresence>
               {error && (
                 <motion.div
@@ -144,7 +112,6 @@ export const Login = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-
             <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               <div className="space-y-2">
                 <Label htmlFor="login-email" className="text-foreground">
@@ -164,7 +131,6 @@ export const Login = () => {
                   />
                 </div>
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="login-password" className="text-foreground">
                   Password
@@ -192,7 +158,6 @@ export const Login = () => {
                   </button>
                 </div>
               </div>
-
               <div className="flex items-center justify-end">
                 <Link
                   to="/auth/forgot-password"
@@ -201,7 +166,6 @@ export const Login = () => {
                   Forgot password?
                 </Link>
               </div>
-
               <Button
                 type="submit"
                 disabled={loading}
@@ -236,14 +200,12 @@ export const Login = () => {
                 )}
               </Button>
             </form>
-
             <div className="relative my-6">
               <Separator />
               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-3 text-xs text-muted-foreground">
                 or
               </span>
             </div>
-
             <Button
               type="button"
               variant="outline"
@@ -270,7 +232,6 @@ export const Login = () => {
               </svg>
               Continue with Google
             </Button>
-
             <p className="mt-8 text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{' '}
               <Link

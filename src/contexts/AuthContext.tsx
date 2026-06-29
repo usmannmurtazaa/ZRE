@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
 import { auth } from '@/config/firebase'
-import { User as FirebaseUser, onAuthStateChanged, signOut, onIdTokenChanged } from 'firebase/auth'
+import {
+  User as FirebaseUser,
+  onAuthStateChanged,
+  signOut,
+  onIdTokenChanged,
+  getRedirectResult,
+} from 'firebase/auth'
 import { useDispatch } from 'react-redux'
 import { setUser, clearUser } from '@/store/slices/authSlice'
 import { useToast } from '@/hooks/use-toast'
@@ -33,7 +39,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast()
   const authReadyRef = useRef(false)
 
-  // Create Firestore user document if it doesn't exist
   const ensureUserDocument = useCallback(async (firebaseUser: FirebaseUser) => {
     try {
       const existingUser = await userService.getUser(firebaseUser.uid)
@@ -47,14 +52,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           role: 'buyer',
           isActive: true,
         })
-        console.log('[Auth] Created missing user document for', firebaseUser.uid)
       }
     } catch (error) {
-      console.error('[Auth] Failed to ensure user document:', error)
+      console.error('[Auth] ensureUserDocument error:', error)
     }
   }, [])
 
-  // Resolve user data for Redux
   const resolveAuthUser = useCallback(
     async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
@@ -68,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             phoneNumber = firestoreUser.phoneNumber ?? null
           }
         } catch (error) {
-          console.error('[Auth] Failed to fetch user role:', error)
+          console.error('[Auth] resolveAuthUser error:', error)
         }
 
         dispatch(
@@ -103,17 +106,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   )
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, handleAuthStateChange, (error) => {
-      console.error('[Auth] onAuthStateChanged error:', error)
-      setLoading(false)
-      setInitializing(false)
-      toast({
-        title: 'Authentication error',
-        description: 'There was a problem checking your login status.',
-        variant: 'destructive',
+    const init = async () => {
+      // Process any pending redirect result BEFORE listening for auth state changes
+      try {
+        const result = await getRedirectResult(auth)
+        if (result) {
+          console.log('[Auth] Redirect result processed for:', result.user.email)
+        }
+      } catch (error) {
+        console.error('[Auth] getRedirectResult error:', error)
+      }
+
+      const unsubscribe = onAuthStateChanged(auth, handleAuthStateChange, (error) => {
+        console.error('[Auth] onAuthStateChanged error:', error)
+        setLoading(false)
+        setInitializing(false)
+        toast({
+          title: 'Authentication error',
+          description: 'There was a problem checking your login status.',
+          variant: 'destructive',
+        })
       })
-    })
-    return unsubscribe
+      return unsubscribe
+    }
+
+    init()
   }, [handleAuthStateChange, toast])
 
   useEffect(() => {

@@ -5,15 +5,18 @@ import React from 'react'
 
 // Mock Framer Motion to avoid jsdom errors
 vi.mock('framer-motion', () => ({
-  motion: new Proxy({}, {
-    get: () => {
-      return React.forwardRef(({ children, ...rest }: any, ref: any) => {
-        const { initial, animate, exit, whileHover, whileTap, variants, ...htmlProps } = rest
-        const Tag = 'div'
-        return React.createElement(Tag, { ...htmlProps, ref }, children)
-      })
-    },
-  }),
+  motion: new Proxy(
+    {},
+    {
+      get: () => {
+        return React.forwardRef(({ children, ...rest }: any, ref: any) => {
+          const { initial, animate, exit, whileHover, whileTap, variants, ...htmlProps } = rest
+          const Tag = 'div'
+          return React.createElement(Tag, { ...htmlProps, ref }, children)
+        })
+      },
+    }
+  ),
   AnimatePresence: ({ children }: any) => children,
 }))
 
