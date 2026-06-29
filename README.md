@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/usmanmurtaza/zain-real-estate/main/public/logo.png" alt="Zain Real Estate" width="80" />
+  <img src="https://raw.githubusercontent.com/usmanmurtaza/ZRE/main/public/logo.png" alt="Zain Real Estate" width="80" />
 </p>
 
 <h1 align="center">Zain Real Estate</h1>
@@ -12,8 +12,8 @@
   <a href="https://zainrealestate.com" target="_blank">
     <img src="https://img.shields.io/badge/LIVE-Website-%23162660?style=for-the-badge&logo=vercel" alt="Live Website" />
   </a>
-  <a href="https://github.com/usmanmurtaza/zain-real-estate/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/usmanmurtaza/zain-real-estate/deploy.yml?style=for-the-badge&logo=github" alt="Build Status" />
+  <a href="https://github.com/usmanmurtaza/ZRE/actions">
+    <img src="https://img.shields.io/github/actions/workflow/status/usmanmurtaza/ZRE/deploy.yml?style=for-the-badge&logo=github" alt="Build Status" />
   </a>
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-Proprietary-%23C6A972?style=for-the-badge" alt="License" />
@@ -84,8 +84,8 @@
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/usmanmurtaza/zain-real-estate.git
-cd zain-real-estate
+git clone https://github.com/usmanmurtaza/ZRE.git
+cd ZRE
 ```
 
 
