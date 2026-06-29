@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/usmanmurtaza/ZRE/main/public/logo.png" alt="Zain Real Estate" width="80" />
+  <img src="https://github.com/usmannmurtazaa/ZRE/blob/main/public/logo.png" alt="Zain Real Estate" width="80" />
 </p>
 
 <h1 align="center">Zain Real Estate</h1>
