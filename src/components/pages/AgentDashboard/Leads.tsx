@@ -21,11 +21,14 @@ import { Phone, Eye, RefreshCcw, CheckCircle, Clock, MessageSquare } from 'lucid
 import { cn } from '@/lib/helpers/cn'
 
 const statusColors: Record<string, string> = {
-  new: 'bg-blue-50 text-blue-700 border-blue-200',
-  contacted: 'bg-amber-50 text-amber-700 border-amber-200',
-  qualified: 'bg-purple-50 text-purple-700 border-purple-200',
-  converted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  lost: 'bg-red-50 text-red-700 border-red-200',
+  new: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
+  contacted:
+    'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800',
+  qualified:
+    'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800',
+  converted:
+    'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800',
+  lost: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
 }
 
 const fadeInSection = {
@@ -65,7 +68,6 @@ export const Leads = () => {
     )
   }
 
-  // Summary statistics
   const stats = useMemo(() => {
     if (!leads) return null
     const total = leads.length
@@ -82,7 +84,7 @@ export const Leads = () => {
       sortable: true,
       cell: (item: any) => (
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-full bg-brand-50 text-brand-600 font-medium text-sm flex items-center justify-center shrink-0">
+          <div className="h-9 w-9 rounded-full bg-primary/10 text-primary font-medium text-sm flex items-center justify-center shrink-0">
             {item.name
               ?.split(' ')
               .map((n: string) => n[0])
@@ -91,7 +93,7 @@ export const Leads = () => {
               .toUpperCase() || '?'}
           </div>
           <div>
-            <p className="font-medium text-neutral-900 text-sm">{item.name}</p>
+            <p className="font-medium text-foreground text-sm">{item.name}</p>
             <p className="text-xs text-muted-foreground">{item.email}</p>
           </div>
         </div>
@@ -103,7 +105,7 @@ export const Leads = () => {
       cell: (item: any) => (
         <a
           href={`tel:${item.phone}`}
-          className="text-sm text-brand-600 hover:underline flex items-center gap-1"
+          className="text-sm text-primary hover:underline flex items-center gap-1 dark:text-gold-400"
         >
           <Phone className="h-3.5 w-3.5" />
           {item.phone}
@@ -114,7 +116,7 @@ export const Leads = () => {
       key: 'propertyTitle',
       header: 'Property',
       cell: (item: any) => (
-        <span className="text-sm">{item.propertyTitle || 'General Inquiry'}</span>
+        <span className="text-sm text-foreground">{item.propertyTitle || 'General Inquiry'}</span>
       ),
     },
     {
@@ -130,7 +132,7 @@ export const Leads = () => {
           >
             <SelectTrigger
               className={cn(
-                'h-8 w-[130px] border-0 bg-transparent px-2 text-xs font-medium capitalize hover:bg-neutral-100 transition-colors',
+                'h-8 w-[130px] border-0 bg-transparent px-2 text-xs font-medium capitalize hover:bg-muted transition-colors',
                 changingStatusFor === item.leadId && 'opacity-50 cursor-not-allowed'
               )}
             >
@@ -152,7 +154,7 @@ export const Leads = () => {
             variant="outline"
             className={cn(
               'capitalize text-xs font-medium',
-              statusColors[item.status] || 'bg-neutral-50 text-neutral-600 border-neutral-200'
+              statusColors[item.status] || 'bg-muted text-muted-foreground border-border'
             )}
           >
             {item.status}
@@ -197,14 +199,13 @@ export const Leads = () => {
         variants={fadeInSection}
         className="max-w-7xl mx-auto px-4 py-8"
       >
-        {/* Header */}
         <motion.div
           variants={itemFadeUp}
           className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"
         >
           <div>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight flex items-center gap-3">
-              <MessageSquare className="h-8 w-8 text-brand-600" />
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground tracking-tight flex items-center gap-3">
+              <MessageSquare className="h-8 w-8 text-primary" />
               My Leads
             </h1>
             <p className="mt-2 text-muted-foreground">View and manage leads assigned to you.</p>
@@ -213,17 +214,17 @@ export const Leads = () => {
             <div className="flex items-center gap-4 text-sm">
               <div className="flex items-center gap-1.5">
                 <span className="text-muted-foreground">Total</span>
-                <span className="font-semibold text-neutral-900">{stats.total}</span>
+                <span className="font-semibold text-foreground">{stats.total}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-blue-500" />
                 <span className="text-muted-foreground">New</span>
-                <span className="font-semibold text-neutral-900">{stats.newCount}</span>
+                <span className="font-semibold text-foreground">{stats.newCount}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <span className="text-muted-foreground">Converted</span>
-                <span className="font-semibold text-neutral-900">{stats.convertedCount}</span>
+                <span className="font-semibold text-foreground">{stats.convertedCount}</span>
               </div>
             </div>
           )}
@@ -232,20 +233,20 @@ export const Leads = () => {
         {/* Quick stats pills */}
         {!isLoading && stats && (
           <motion.div variants={itemFadeUp} className="flex flex-wrap gap-4 mb-6">
-            <div className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-4 py-2.5 text-sm">
+            <div className="flex items-center gap-2 rounded-xl bg-card border border-border px-4 py-2.5 text-sm">
               <Clock className="h-4 w-4 text-blue-500" />
-              <span className="text-neutral-600">New</span>
-              <span className="font-bold">{stats.newCount}</span>
+              <span className="text-muted-foreground">New</span>
+              <span className="font-bold text-foreground">{stats.newCount}</span>
             </div>
-            <div className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-4 py-2.5 text-sm">
+            <div className="flex items-center gap-2 rounded-xl bg-card border border-border px-4 py-2.5 text-sm">
               <Phone className="h-4 w-4 text-amber-500" />
-              <span className="text-neutral-600">Contacted</span>
-              <span className="font-bold">{stats.contactedCount}</span>
+              <span className="text-muted-foreground">Contacted</span>
+              <span className="font-bold text-foreground">{stats.contactedCount}</span>
             </div>
-            <div className="flex items-center gap-2 rounded-xl bg-white border border-neutral-200 px-4 py-2.5 text-sm">
+            <div className="flex items-center gap-2 rounded-xl bg-card border border-border px-4 py-2.5 text-sm">
               <CheckCircle className="h-4 w-4 text-emerald-500" />
-              <span className="text-neutral-600">Converted</span>
-              <span className="font-bold">{stats.convertedCount}</span>
+              <span className="text-muted-foreground">Converted</span>
+              <span className="font-bold text-foreground">{stats.convertedCount}</span>
             </div>
           </motion.div>
         )}
@@ -253,7 +254,7 @@ export const Leads = () => {
         {/* Data table */}
         <motion.div
           variants={itemFadeUp}
-          className="rounded-2xl border border-neutral-200/80 bg-white shadow-sm overflow-hidden"
+          className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden"
         >
           <DataTable
             data={leads || []}

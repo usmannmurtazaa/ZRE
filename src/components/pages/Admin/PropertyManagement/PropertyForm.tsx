@@ -84,16 +84,16 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-8 bg-white rounded-2xl border border-neutral-200/80 shadow-sm p-6 sm:p-8"
+      className="space-y-8 bg-card rounded-2xl border border-border shadow-card p-6 sm:p-8"
       noValidate
     >
       {/* Basic Information */}
       <div className="space-y-5">
-        <h3 className="font-serif text-xl font-semibold text-neutral-900">Basic Information</h3>
+        <h3 className="font-serif text-xl font-semibold text-card-foreground">Basic Information</h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-neutral-700">
+            <Label htmlFor="title" className="text-foreground">
               Title <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -102,7 +102,6 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
               {...register('title')}
               aria-invalid={!!errors.title}
               aria-describedby={errors.title ? 'title-error' : undefined}
-              className="transition-all duration-200 focus-visible:ring-2"
             />
             {errors.title && (
               <p
@@ -117,7 +116,7 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="price" className="text-neutral-700">
+            <Label htmlFor="price" className="text-foreground">
               Price (PKR) <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -127,7 +126,6 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
               {...register('price', { valueAsNumber: true })}
               aria-invalid={!!errors.price}
               aria-describedby={errors.price ? 'price-error' : undefined}
-              className="transition-all duration-200"
             />
             {errors.price && (
               <p
@@ -143,7 +141,7 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="description" className="text-neutral-700">
+          <Label htmlFor="description" className="text-foreground">
             Description
           </Label>
           <Textarea
@@ -151,7 +149,6 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
             placeholder="Describe the property, its features, and unique selling points..."
             {...register('description')}
             rows={4}
-            className="transition-all duration-200"
           />
           {errors.description && (
             <p className="text-sm text-destructive flex items-center gap-1">
@@ -164,12 +161,12 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
 
       {/* Classification */}
       <div className="space-y-5">
-        <h3 className="font-serif text-xl font-semibold text-neutral-900">Classification</h3>
+        <h3 className="font-serif text-xl font-semibold text-card-foreground">Classification</h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Type */}
           <div className="space-y-2">
-            <Label htmlFor="type" className="text-neutral-700">
+            <Label htmlFor="type" className="text-foreground">
               Property Type <span className="text-destructive">*</span>
             </Label>
             <Select
@@ -197,7 +194,7 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
 
           {/* Subtype */}
           <div className="space-y-2">
-            <Label htmlFor="subtype" className="text-neutral-700">
+            <Label htmlFor="subtype" className="text-foreground">
               Subtype <span className="text-destructive">*</span>
             </Label>
             <Select
@@ -227,7 +224,7 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
 
           {/* Status */}
           <div className="space-y-2">
-            <Label htmlFor="status" className="text-neutral-700">
+            <Label htmlFor="status" className="text-foreground">
               Status <span className="text-destructive">*</span>
             </Label>
             <Select
@@ -257,11 +254,13 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
 
       {/* Location & Size */}
       <div className="space-y-5">
-        <h3 className="font-serif text-xl font-semibold text-neutral-900">Location &amp; Size</h3>
+        <h3 className="font-serif text-xl font-semibold text-card-foreground">
+          Location &amp; Size
+        </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="area" className="text-neutral-700">
+            <Label htmlFor="area" className="text-foreground">
               Area <span className="text-destructive">*</span>
             </Label>
             <Select onValueChange={(val) => setValue('area', val)} defaultValue={watch('area')}>
@@ -285,7 +284,7 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="sizeSqYds" className="text-neutral-700">
+            <Label htmlFor="sizeSqYds" className="text-foreground">
               Size (Sq Yds) <span className="text-destructive">*</span>
             </Label>
             <Input
@@ -293,7 +292,6 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
               type="number"
               placeholder="e.g. 500"
               {...register('sizeSqYds', { valueAsNumber: true })}
-              className="transition-all duration-200"
             />
             {errors.sizeSqYds && (
               <p className="text-sm text-destructive flex items-center gap-1">
@@ -304,15 +302,10 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
           </div>
 
           <div className="space-y-2 sm:col-span-2">
-            <Label htmlFor="address" className="text-neutral-700">
+            <Label htmlFor="address" className="text-foreground">
               Address
             </Label>
-            <Input
-              id="address"
-              placeholder="Full address"
-              {...register('address')}
-              className="transition-all duration-200"
-            />
+            <Input id="address" placeholder="Full address" {...register('address')} />
             {errors.address && (
               <p className="text-sm text-destructive flex items-center gap-1">
                 <AlertCircle className="h-3.5 w-3.5" />
@@ -325,16 +318,16 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
 
       {/* Features */}
       <div className="space-y-5">
-        <h3 className="font-serif text-xl font-semibold text-neutral-900">Features</h3>
-        <fieldset className="border rounded-xl p-5 bg-neutral-50/80">
-          <legend className="px-2 text-sm font-medium text-neutral-600">
+        <h3 className="font-serif text-xl font-semibold text-card-foreground">Features</h3>
+        <fieldset className="border border-border rounded-xl p-5 bg-muted/50">
+          <legend className="px-2 text-sm font-medium text-muted-foreground">
             Select applicable features
           </legend>
           <div className="flex flex-wrap gap-3">
             {FEATURES.map((feature) => (
               <label
                 key={feature}
-                className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-neutral-200 hover:border-brand-300 hover:bg-brand-50/30 cursor-pointer transition-colors duration-150"
+                className="group flex items-center gap-2 px-3 py-2 rounded-xl bg-background border border-border hover:border-gold-500/40 dark:hover:border-gold-500/40 hover:bg-gold-500/5 cursor-pointer transition-colors duration-150"
               >
                 <Checkbox
                   checked={selectedFeatures.includes(feature)}
@@ -348,9 +341,9 @@ export const PropertyForm = ({ initialData, onSuccess }: PropertyFormProps) => {
                       )
                     }
                   }}
-                  className="border-neutral-300 text-brand-600"
+                  className="border-input data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                 />
-                <span className="text-sm text-neutral-700 group-hover:text-brand-800 font-medium">
+                <span className="text-sm text-foreground group-hover:text-primary font-medium">
                   {feature}
                 </span>
               </label>

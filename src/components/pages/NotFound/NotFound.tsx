@@ -14,12 +14,13 @@ export const NotFound = () => {
         nofollow
       />
 
-      <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 via-white to-brand-50/30 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-primary/5 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background decorative pattern */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, #162660 1px, transparent 0)',
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)',
             backgroundSize: '24px 24px',
           }}
         />
@@ -30,13 +31,13 @@ export const NotFound = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 0.08, scale: 1 }}
             transition={{ duration: 1.5, ease: 'easeOut' }}
-            className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-brand-500 blur-3xl"
+            className="absolute top-1/4 -left-20 w-80 h-80 rounded-full bg-primary blur-3xl"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 0.06, scale: 1 }}
             transition={{ duration: 1.5, ease: 'easeOut', delay: 0.2 }}
-            className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-brand-700 blur-3xl"
+            className="absolute bottom-1/4 -right-20 w-96 h-96 rounded-full bg-primary blur-3xl"
           />
         </div>
 
@@ -51,9 +52,9 @@ export const NotFound = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
-            className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-card border border-neutral-200/80"
+            className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-2xl bg-card shadow-card border border-border"
           >
-            <span className="font-serif text-4xl font-bold text-brand-500">Z</span>
+            <span className="font-serif text-4xl font-bold text-primary">Z</span>
           </motion.div>
 
           {/* 404 heading */}
@@ -62,7 +63,7 @@ export const NotFound = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h1 className="font-serif text-7xl sm:text-8xl lg:text-9xl font-bold text-brand-600 leading-none tracking-tight">
+            <h1 className="font-serif text-7xl sm:text-8xl lg:text-9xl font-bold text-primary leading-none tracking-tight">
               404
             </h1>
           </motion.div>
@@ -74,7 +75,7 @@ export const NotFound = () => {
             transition={{ delay: 0.4 }}
             className="mt-6 space-y-3"
           >
-            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-neutral-900">
+            <h2 className="font-serif text-2xl sm:text-3xl font-semibold text-foreground">
               Page not found
             </h2>
             <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto">

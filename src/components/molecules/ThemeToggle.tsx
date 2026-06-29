@@ -23,9 +23,7 @@ export const ThemeToggle = () => {
         className={cn(
           'relative h-10 w-10 rounded-xl transition-all duration-200',
           'focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-          isDark
-            ? 'hover:bg-neutral-800 text-neutral-400 hover:text-neutral-200'
-            : 'hover:bg-neutral-100 text-neutral-600 hover:text-neutral-900'
+          'text-muted-foreground hover:bg-muted hover:text-foreground'
         )}
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       >

@@ -13,7 +13,6 @@ import { useDispatch } from 'react-redux'
 import { Seo } from '@/components/atoms/Seo'
 import { Settings as SettingsIcon, Save, Building2, Phone, Mail, MapPin, Globe } from 'lucide-react'
 
-// Validation schema for site settings
 const settingsSchema = z.object({
   siteName: z.string().min(2, 'Site name is required'),
   tagline: z.string().optional(),
@@ -43,7 +42,6 @@ export const Settings = () => {
   const updateSettings = useUpdateSettings()
   const dispatch = useDispatch()
 
-  // Convert settings array to form default values
   const defaultValues =
     settings?.reduce((acc: Record<string, any>, s: any) => ({ ...acc, [s.key]: s.value }), {}) || {}
 
@@ -57,7 +55,6 @@ export const Settings = () => {
   })
 
   const onSubmit = (data: SettingsFormData) => {
-    // Convert form data back to array of setting objects
     const updates = Object.entries(data).map(([key, value]) => ({
       key,
       value: value || '',
@@ -84,10 +81,9 @@ export const Settings = () => {
         variants={fadeInSection}
         className="max-w-4xl mx-auto px-4 py-8"
       >
-        {/* Header */}
         <motion.div variants={itemFadeUp} className="mb-8">
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight flex items-center gap-3">
-            <SettingsIcon className="h-8 w-8 text-brand-600" />
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground tracking-tight flex items-center gap-3">
+            <SettingsIcon className="h-8 w-8 text-gold-500" />
             Site Settings
           </h1>
           <p className="mt-2 text-muted-foreground">
@@ -105,19 +101,19 @@ export const Settings = () => {
           <motion.form
             variants={itemFadeUp}
             onSubmit={handleSubmit(onSubmit)}
-            className="space-y-8 bg-white rounded-2xl border border-neutral-200/80 shadow-sm p-6 sm:p-8"
+            className="space-y-8 bg-card rounded-2xl border border-border shadow-sm p-6 sm:p-8"
             noValidate
           >
             {/* Branding Section */}
             <div className="space-y-5">
-              <h3 className="font-serif text-xl font-semibold text-neutral-900 flex items-center gap-2">
-                <Globe className="h-5 w-5 text-brand-600" />
+              <h3 className="font-serif text-xl font-semibold text-foreground flex items-center gap-2">
+                <Globe className="h-5 w-5 text-gold-500" />
                 Branding
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="siteName" className="text-neutral-700">
+                  <Label htmlFor="siteName" className="text-foreground">
                     Site Name <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -134,7 +130,7 @@ export const Settings = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="tagline" className="text-neutral-700">
+                  <Label htmlFor="tagline" className="text-foreground">
                     Tagline
                   </Label>
                   <Input
@@ -149,14 +145,14 @@ export const Settings = () => {
 
             {/* Contact Information */}
             <div className="space-y-5">
-              <h3 className="font-serif text-xl font-semibold text-neutral-900 flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-brand-600" />
+              <h3 className="font-serif text-xl font-semibold text-foreground flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-gold-500" />
                 Contact Details
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="contactPhone" className="text-neutral-700">
+                  <Label htmlFor="contactPhone" className="text-foreground">
                     <Phone className="h-3.5 w-3.5 inline mr-1.5" />
                     Phone Number
                   </Label>
@@ -169,7 +165,7 @@ export const Settings = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="contactEmail" className="text-neutral-700">
+                  <Label htmlFor="contactEmail" className="text-foreground">
                     <Mail className="h-3.5 w-3.5 inline mr-1.5" />
                     Email Address
                   </Label>
@@ -186,7 +182,7 @@ export const Settings = () => {
                 </div>
 
                 <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="officeAddress" className="text-neutral-700">
+                  <Label htmlFor="officeAddress" className="text-foreground">
                     <MapPin className="h-3.5 w-3.5 inline mr-1.5" />
                     Office Address
                   </Label>
@@ -203,14 +199,14 @@ export const Settings = () => {
 
             {/* Social Links */}
             <div className="space-y-5">
-              <h3 className="font-serif text-xl font-semibold text-neutral-900 flex items-center gap-2">
-                <Globe className="h-5 w-5 text-brand-600" />
+              <h3 className="font-serif text-xl font-semibold text-foreground flex items-center gap-2">
+                <Globe className="h-5 w-5 text-gold-500" />
                 Social Links
               </h3>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="facebookUrl" className="text-neutral-700">
+                  <Label htmlFor="facebookUrl" className="text-foreground">
                     Facebook URL
                   </Label>
                   <Input
@@ -222,7 +218,7 @@ export const Settings = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="instagramUrl" className="text-neutral-700">
+                  <Label htmlFor="instagramUrl" className="text-foreground">
                     Instagram URL
                   </Label>
                   <Input
@@ -234,7 +230,7 @@ export const Settings = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="linkedinUrl" className="text-neutral-700">
+                  <Label htmlFor="linkedinUrl" className="text-foreground">
                     LinkedIn URL
                   </Label>
                   <Input
@@ -246,7 +242,7 @@ export const Settings = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="whatsappNumber" className="text-neutral-700">
+                  <Label htmlFor="whatsappNumber" className="text-foreground">
                     WhatsApp Number
                   </Label>
                   <Input
@@ -260,7 +256,7 @@ export const Settings = () => {
             </div>
 
             {/* Save Button */}
-            <div className="pt-6 border-t border-neutral-100 flex items-center gap-4">
+            <div className="pt-6 border-t border-border flex items-center gap-4">
               <Button type="submit" disabled={!isDirty} className="min-w-[160px] gap-2" size="lg">
                 <Save className="h-4 w-4" />
                 Save Changes

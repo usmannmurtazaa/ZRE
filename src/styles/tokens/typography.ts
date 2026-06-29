@@ -13,7 +13,7 @@ export const fontFamily = {
   /** Primary body font – modern, highly legible. */
   sans: "'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   /** Display / heading font – timeless serif for a luxurious feel. */
-  serif: "'Forum', Georgia, 'Times New Roman', serif",
+  serif: "'Cormorant Garamond', 'Playfair Display', 'Forum', Georgia, 'Times New Roman', serif",
   /** Monospace for numbers, code, and technical data. */
   mono: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace",
 } as const

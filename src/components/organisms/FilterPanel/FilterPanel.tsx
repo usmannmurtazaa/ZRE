@@ -38,17 +38,14 @@ export const FilterPanel = ({ filters, onApply, onClear, className }: FilterPane
   const [sortBy, setSortBy] = useState<string>(filters.sortBy || 'newest')
   const [features, setFeatures] = useState<string[]>([])
 
-  // Collapsible section state
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set())
 
-  // Format PKR for display
   const formatPrice = (value: number) => {
     if (value >= 10_000_000) return `PKR ${(value / 10_000_000).toFixed(1)}Cr`
     if (value >= 100_000) return `PKR ${(value / 100_000).toFixed(1)}Lac`
     return `PKR ${value.toLocaleString()}`
   }
 
-  // Active filter count
   const activeFilterCount = useMemo(
     () =>
       type.length +
@@ -107,7 +104,6 @@ export const FilterPanel = ({ filters, onApply, onClear, className }: FilterPane
     onClear?.()
   }
 
-  // Section wrapper component for consistent collapsing
   const CollapsibleSection = ({
     id,
     title,

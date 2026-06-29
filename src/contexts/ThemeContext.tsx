@@ -37,7 +37,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     theme === 'system' ? getSystemTheme() : (theme as 'light' | 'dark')
   )
 
-  // Update resolved theme based on theme preference and system
   useEffect(() => {
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
@@ -52,14 +51,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [theme])
 
-  // Apply class to document and persist
   useEffect(() => {
     const root = document.documentElement
     root.classList.remove('light', 'dark')
     root.classList.add(resolvedTheme)
     localStorage.setItem(STORAGE_KEY, theme)
 
-    // Handle reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReducedMotion) {
       root.style.setProperty('--transition-duration', '0s')
@@ -73,10 +70,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const toggleTheme = useCallback(() => {
     setThemeState((prev) => {
       if (prev === 'system') {
-        // If currently system, switch to the opposite of resolved
         return resolvedTheme === 'dark' ? 'light' : 'dark'
       }
-      // If currently light/dark, toggle between them
       return prev === 'dark' ? 'light' : 'dark'
     })
   }, [resolvedTheme])

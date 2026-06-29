@@ -23,11 +23,14 @@ import { cn } from '@/lib/helpers/cn'
 import { formatDate } from '@/lib/helpers/date'
 
 const statusColors: Record<string, string> = {
-  new: 'bg-blue-50 text-blue-700 border-blue-200',
-  contacted: 'bg-amber-50 text-amber-700 border-amber-200',
-  qualified: 'bg-purple-50 text-purple-700 border-purple-200',
-  converted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  lost: 'bg-red-50 text-red-700 border-red-200',
+  new: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
+  contacted:
+    'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800',
+  qualified:
+    'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800',
+  converted:
+    'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800',
+  lost: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
 }
 
 const fadeInSection = {
@@ -105,8 +108,8 @@ export const AgentDashboard = () => {
             className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"
           >
             <div>
-              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight flex items-center gap-3">
-                <Building2 className="h-8 w-8 text-brand-600" />
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground tracking-tight flex items-center gap-3">
+                <Building2 className="h-8 w-8 text-primary" />
                 Agent Dashboard
               </h1>
               <p className="mt-2 text-muted-foreground">
@@ -168,12 +171,12 @@ export const AgentDashboard = () => {
         <motion.div initial="hidden" animate="visible" variants={fadeInSection}>
           <motion.div
             variants={itemFadeUp}
-            className="rounded-2xl border border-neutral-200/80 bg-white shadow-sm overflow-hidden"
+            className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden"
           >
-            <div className="flex items-center justify-between px-6 py-5 border-b border-neutral-100">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-border">
               <div>
-                <h2 className="font-serif text-lg font-semibold text-neutral-900 flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5 text-brand-600" />
+                <h2 className="font-serif text-lg font-semibold text-foreground flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary" />
                   Recent Leads
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -183,7 +186,7 @@ export const AgentDashboard = () => {
               {recentLeads.length > 0 && (
                 <Link
                   to="/agent-dashboard/leads"
-                  className="text-sm font-medium text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors"
+                  className="text-sm font-medium text-primary hover:text-primary/80 dark:hover:text-gold-400 flex items-center gap-1 transition-colors"
                 >
                   View all <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
@@ -201,10 +204,10 @@ export const AgentDashboard = () => {
                   <Link
                     key={lead.leadId}
                     to={`/agent-dashboard/leads/${lead.leadId}`}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-neutral-50 transition-colors"
+                    className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-muted transition-colors"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="font-medium text-neutral-900 truncate">{lead.name}</p>
+                      <p className="font-medium text-foreground truncate">{lead.name}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">
                         {lead.propertyTitle || 'General Inquiry'} &middot; {lead.email}
                       </p>
@@ -218,7 +221,7 @@ export const AgentDashboard = () => {
                         className={cn(
                           'capitalize text-xs font-medium',
                           statusColors[lead.status] ||
-                            'bg-neutral-50 text-neutral-600 border-neutral-200'
+                            'bg-muted text-muted-foreground border-border'
                         )}
                       >
                         {lead.status}
@@ -229,7 +232,7 @@ export const AgentDashboard = () => {
                 ))
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
-                  <MessageSquare className="h-8 w-8 mx-auto mb-2 text-neutral-300" />
+                  <MessageSquare className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
                   <p className="text-sm">No leads yet</p>
                   <p className="text-xs mt-1">
                     Leads will appear here once someone inquires about your properties.

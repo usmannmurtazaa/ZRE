@@ -116,7 +116,7 @@ export const About = () => {
     createdAt: new Date(),
     updatedAt: new Date(),
     isFeatured: false,
-    experienceYears: 10,
+    experienceYears: 2,
     bio: 'Property Consultant helping clients find their dream properties.',
   }
 

@@ -12,18 +12,10 @@ interface KpiCardProps {
     isPositive: boolean
   }
   className?: string
-  /** Optional description below the value */
   description?: string
-  /** Click handler to make the card interactive */
   onClick?: () => void
 }
 
-/**
- * KpiCard – premium key performance indicator card with
- * subtle entrance animation, trend indicator, and hover elevation.
- *
- * Fully theme‑aware – works flawlessly in light & dark modes.
- */
 export const KpiCard = ({
   title,
   value,
@@ -33,9 +25,7 @@ export const KpiCard = ({
   description,
   onClick,
 }: KpiCardProps) => {
-  // Format numeric values with locale string
   const formattedValue = typeof value === 'number' ? value.toLocaleString('en-PK') : value
-
   const isInteractive = typeof onClick === 'function'
 
   return (
@@ -66,20 +56,13 @@ export const KpiCard = ({
       )}
     >
       <div className="flex-1 min-w-0">
-        {/* Title */}
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
           {title}
         </p>
-
-        {/* Value */}
         <p className="text-2xl sm:text-3xl font-bold tracking-tight text-card-foreground">
           {formattedValue}
         </p>
-
-        {/* Optional description */}
         {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
-
-        {/* Trend indicator */}
         {trend && (
           <div className="mt-3 flex items-center gap-1.5">
             <span
@@ -101,8 +84,6 @@ export const KpiCard = ({
           </div>
         )}
       </div>
-
-      {/* Icon */}
       {icon && (
         <div className="ml-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
           {icon}

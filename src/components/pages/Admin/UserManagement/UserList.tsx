@@ -76,7 +76,7 @@ export const UserList = () => {
       sortable: true,
       cell: (item: any) => (
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 dark:bg-brand-500/20 text-brand-600 dark:text-brand-300 font-medium text-sm">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary font-medium text-sm">
             {item.displayName
               ?.split(' ')
               .map((n: string) => n[0])

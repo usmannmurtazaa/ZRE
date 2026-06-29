@@ -14,8 +14,6 @@ export const Favorites = () => {
 
   const favoriteIds = useMemo(() => favorites?.map((f) => f.propertyId) || [], [favorites])
 
-  // Fetch a reasonable set of properties – ideally we'd fetch by IDs,
-  // but for MVP we fetch all and filter client-side for simplicity.
   const { data: propertiesData, isLoading: propsLoading } = useProperties({
     limit: 100,
     status: ['for_sale', 'for_rent', 'sold'],
@@ -40,7 +38,7 @@ export const Favorites = () => {
       >
         <div className="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight flex items-center gap-3">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground tracking-tight flex items-center gap-3">
               <Heart className="h-8 w-8 text-red-500" />
               My Favorites
             </h1>
@@ -73,12 +71,12 @@ export const Favorites = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-2xl border border-dashed border-neutral-300 shadow-sm"
+            className="flex flex-col items-center justify-center py-20 text-center bg-card rounded-2xl border border-dashed border-border shadow-sm"
           >
-            <div className="rounded-full bg-neutral-100 p-4 mb-6">
-              <Heart className="h-10 w-10 text-neutral-300" />
+            <div className="rounded-full bg-muted p-4 mb-6">
+              <Heart className="h-10 w-10 text-muted-foreground/40" />
             </div>
-            <h2 className="font-serif text-xl font-semibold text-neutral-800 mb-2">
+            <h2 className="font-serif text-xl font-semibold text-foreground mb-2">
               No favorites yet
             </h2>
             <p className="text-muted-foreground max-w-md mb-6">

@@ -1,5 +1,5 @@
 /**
- * Color Tokens – Navy / Gold / Lavender Blue Luxury Edition
+ * Color Tokens – Metallic Chic (Light) / Gorgeous Contrast (Dark)
  *
  * Central source of truth for all colours used in Zain Real Estate.
  * These tokens feed into both Tailwind and inline styles, ensuring
@@ -8,82 +8,97 @@
  * @module tokens/colors
  */
 
-// ── Brand Palette (Deep Navy Blue) ─────────────────────────────────────
+// ── Brand Palette (Metallic Blue) ──────────────────────────────────
 export const brand = {
-  '50': '#EDF1F9', // lavender tint – subtle backgrounds
-  '100': '#D4DFF2', // light lavender
-  '200': '#A8BFE6', // soft periwinkle
-  '300': '#7B9AD6', // lavender blue
-  '400': '#4A73C4', // medium blue
-  '500': '#0B1D3A', // deep navy (primary)
-  '600': '#091830', // darker navy
-  '700': '#071325', // very dark navy
-  '800': '#040D1A', // near‑black navy
-  '900': '#020810', // almost black
-  '950': '#01040A', // absolute navy black
+  '50': '#F0F2FA', // very light blue tint
+  '100': '#E1E6F5', // light periwinkle
+  '200': '#C3CEF0', // soft blue
+  '300': '#ADBBDA', // light blue (accent)
+  '400': '#8697C4', // muted blue
+  '500': '#3D52A0', // primary blue (metallic chic)
+  '600': '#33478A',
+  '700': '#2A3B74',
+  '800': '#202F5E',
+  '900': '#162348',
+  '950': '#0C1732',
 } as const
 
-// ── Gold Accent Palette ────────────────────────────────────────────────
+// ── Metallic Accent Palette (replaces gold in light mode) ──────────
+export const accent = {
+  '50': '#F0F4FD',
+  '100': '#E1E9FB',
+  '200': '#C3D3F7',
+  '300': '#A5BDF3',
+  '400': '#87A7EF',
+  '500': '#7091E6', // signature metallic accent (secondary blue)
+  '600': '#5E7DD4',
+  '700': '#4C69C0',
+  '800': '#3A55AC',
+  '900': '#284198',
+  '950': '#162D84',
+} as const
+
+// ── Gold / Warm Accent (kept for compatibility, maps to green in dark) ─
 export const gold = {
-  '50': '#FDFBF7',
-  '100': '#F9F2E2',
-  '200': '#F3E4C5',
-  '300': '#ECD2A1',
-  '400': '#E1BC7A',
-  '500': '#C6A972', // signature gold
-  '600': '#B08D4F',
-  '700': '#8F713A',
-  '800': '#6E5629',
-  '900': '#4D3B1A',
-  '950': '#2E220C',
+  '50': '#F2F7ED',
+  '100': '#E1EFD2',
+  '200': '#C4E0A8',
+  '300': '#A6D07E',
+  '400': '#89C054',
+  '500': '#86C232', // accent green (used in dark mode)
+  '600': '#72A82A',
+  '700': '#5E8E22',
+  '800': '#4A741A',
+  '900': '#365A12',
+  '950': '#22400A',
 } as const
 
-// ── Lavender Blue Accent Palette ───────────────────────────────────────
+// ── Lavender / Soft Accent Palette ─────────────────────────────────
 export const lavender = {
-  '50': '#F5F7FC',
-  '100': '#E8ECF7',
-  '200': '#D1D9F0',
-  '300': '#B0BDE5',
-  '400': '#8A9CD8',
-  '500': '#7B8EB2', // signature lavender blue
-  '600': '#6478A0',
-  '700': '#4E628A',
-  '800': '#3A4C6E',
-  '900': '#263652',
-  '950': '#182138',
+  '50': '#F8F6FD',
+  '100': '#EDE8F5', // very light background
+  '200': '#DCD0EC',
+  '300': '#C2B0E0',
+  '400': '#A890D4',
+  '500': '#8697C4', // muted blue (soft metallic)
+  '600': '#7280B0',
+  '700': '#5E699C',
+  '800': '#4A5288',
+  '900': '#363B74',
+  '950': '#222460',
 } as const
 
-// ── Fresh Green Palette ────────────────────────────────────────────────
+// ── Fresh Green Palette (used for success states) ─────────────────
 export const green = {
   '50': '#F0F9F1',
   '100': '#D9F0DC',
   '200': '#B3E0B8',
   '300': '#8CD195',
   '400': '#66C172',
-  '500': '#2E7D32', // deep forest green
-  '600': '#266B2A',
-  '700': '#1E5922',
-  '800': '#15471A',
-  '900': '#0D3512',
-  '950': '#05230A',
+  '500': '#61892F', // primary green (dark mode primary)
+  '600': '#527528',
+  '700': '#436121',
+  '800': '#344D1A',
+  '900': '#253913',
+  '950': '#16250C',
 } as const
 
-// ── Neutral Palette (adapted for navy theme) ───────────────────────────
+// ── Neutral Palette (adapted for metallic chic / gorgeous contrast) ─
 export const neutral = {
   '50': '#F8F9FB',
   '100': '#EFF1F5',
   '200': '#E1E4EB',
   '300': '#CDD2DC',
   '400': '#A0A7B8',
-  '500': '#6E758A',
-  '600': '#4F5668',
-  '700': '#3A4050',
-  '800': '#242A38',
-  '900': '#1A2332',
-  '950': '#0F1620',
+  '500': '#6B6E70', // neutral gray
+  '600': '#55585A',
+  '700': '#3F4244',
+  '800': '#474B4F', // dark surface
+  '900': '#222629', // dark background
+  '950': '#16181A',
 } as const
 
-// ── Semantic Colours ───────────────────────────────────────────────────
+// ── Semantic Colours ───────────────────────────────────────────────
 export const success = {
   '50': green['50'],
   '100': green['100'],
@@ -148,7 +163,7 @@ export const info = {
   dark: '#1E3A8A',
 } as const
 
-// ── Semantic Colour Map (CSS Variable aliases) ─────────────────────────
+// ── Semantic Colour Map (CSS Variable aliases) ─────────────────────
 export const semantic = {
   background: '#FFFFFF',
   foreground: neutral['900'],
@@ -156,40 +171,41 @@ export const semantic = {
   'card-foreground': neutral['900'],
   popover: '#FFFFFF',
   'popover-foreground': neutral['900'],
-  primary: brand['500'], // deep navy
+  primary: brand['500'], // #3D52A0 (metallic blue)
   'primary-foreground': '#FFFFFF',
-  secondary: lavender['50'], // light lavender tint
+  secondary: lavender['100'], // #EDE8F5 (very light background)
   'secondary-foreground': brand['500'],
-  muted: neutral['100'],
+  muted: lavender['50'],
   'muted-foreground': neutral['600'],
-  accent: gold['500'], // gold accent
+  accent: accent['500'], // #7091E6 (metallic accent)
   'accent-foreground': brand['500'],
   destructive: error.DEFAULT,
   'destructive-foreground': '#FFFFFF',
   border: neutral['200'],
   input: neutral['200'],
-  ring: gold['500'], // gold focus ring
-  surface: neutral['50'],
+  ring: accent['500'], // metallic accent focus ring
+  surface: lavender['50'],
   'surface-foreground': neutral['900'],
   success: success.DEFAULT,
   warning: warning.DEFAULT,
   error: error.DEFAULT,
   info: info.DEFAULT,
-  // additional luxury tokens
-  gold: gold['500'],
+  // additional tokens
+  gold: accent['500'],
   lavender: lavender['500'],
   green: green['500'],
 } as const
 
-// ── Type Exports ───────────────────────────────────────────────────────
+// ── Type Exports ───────────────────────────────────────────────────
 export type BrandShade = keyof typeof brand
+export type AccentShade = keyof typeof accent
 export type GoldShade = keyof typeof gold
 export type LavenderShade = keyof typeof lavender
 export type GreenShade = keyof typeof green
 export type NeutralShade = keyof typeof neutral
 export type SemanticColor = keyof typeof semantic
 
-// ── Backward Compatibility ─────────────────────────────────────────────
+// ── Backward Compatibility ─────────────────────────────────────────
 export const colors = {
   brand: {
     '50': brand['50'],

@@ -1,15 +1,20 @@
 {
   "name": "Zain Real Estate",
-  "short_name": "Zain RE",
+  "short_name": "Zain Real Estate",
+  "description": "Premium real estate agency in Karachi. 100% legally approved properties.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#162660",
-  "description": "Premium real estate agency in Karachi.",
+  "theme_color": "#0B1D3A",
   "icons": [
     {
-      "src": "/logo.png",
+      "src": "/images/favicon.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/favicon.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]

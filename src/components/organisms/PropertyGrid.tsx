@@ -15,9 +15,7 @@ interface PropertyGridProps {
   onSave?: (id: string) => void
   savedIds?: string[]
   className?: string
-  /** Custom empty state message */
   emptyMessage?: string
-  /** Optional action for empty state (e.g., link to clear filters) */
   emptyAction?: {
     label: string
     onClick: () => void
@@ -57,7 +55,6 @@ export const PropertyGrid = ({
     []
   )
 
-  // Loading state
   if (loading) {
     const skeletonCount = variant === 'grid' ? (columns === 2 ? 4 : columns === 3 ? 6 : 8) : 4
 
@@ -102,7 +99,6 @@ export const PropertyGrid = ({
     )
   }
 
-  // Empty state
   if (properties.length === 0) {
     return (
       <motion.div
@@ -133,7 +129,6 @@ export const PropertyGrid = ({
     )
   }
 
-  // Data grid
   return (
     <div
       className={cn(

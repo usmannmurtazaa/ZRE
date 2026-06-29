@@ -17,30 +17,59 @@ import { Shield, TrendingUp, Users, Clock, ArrowRight, Phone, Star } from 'lucid
 
 const APP_URL = 'https://zainrealestate.netlify.app'
 
-const trustItems = [
+// ═══════════════════════════════════════════════════════════
+// Hero Slides – 5 rotating background images
+// Replace the URLs with your actual image paths
+// ═══════════════════════════════════════════════════════════
+const heroSlides = [
   {
-    label: 'Years of Trust',
-    value: '25+',
-    icon: <Clock className="h-6 w-6" />,
+    title: 'Secure Your Future with Legally Approved Properties in Karachi',
+    subtitle:
+      "25+ years of expertise in Karachi's real estate market. Exclusively dealing in 100% legal, approved, and transferable properties with complete documentation.",
+    backgroundImage: '/images/hero1.png',
+    ctaText: 'Explore Properties',
+    ctaLink: '/properties',
   },
   {
-    label: 'Clients Served',
-    value: '500+',
-    icon: <Users className="h-6 w-6" />,
+    title: 'Premium Residential Plots in Prime Locations',
+    subtitle:
+      'Discover meticulously vetted residential plots in Mehran Town, Korangi, and Hawksbay Scheme 42.',
+    backgroundImage: '/images/hero2.png',
+    ctaText: 'View Residential',
+    ctaLink: '/properties?type=residential',
   },
   {
-    label: 'Properties Sold',
-    value: '300+',
-    icon: <TrendingUp className="h-6 w-6" />,
+    title: 'Invest in Commercial & Industrial Real Estate',
+    subtitle: 'High‑return commercial and industrial properties with complete legal clearance.',
+    backgroundImage: '/images/hero3.png',
+    ctaText: 'Explore Commercial',
+    ctaLink: '/properties?type=commercial',
   },
   {
-    label: 'Years Experience',
-    value: '25',
-    icon: <Star className="h-6 w-6" />,
+    title: 'Trusted by 500+ Families Since 2000',
+    subtitle:
+      'Join hundreds of satisfied clients who secured their investments with Zain Real Estate.',
+    backgroundImage: '/images/hero4.png',
+    ctaText: 'Contact Us',
+    ctaLink: '/contact',
+  },
+  {
+    title: 'Your Dream Property Awaits',
+    subtitle:
+      '100% legal, transferable properties with complete documentation – let us guide you home.',
+    backgroundImage: '/images/hero5.png',
+    ctaText: 'Get Started',
+    ctaLink: '/properties',
   },
 ]
 
-// Static testimonials as fallback
+const trustItems = [
+  { label: 'Years of Trust', value: '25+', icon: <Clock className="h-6 w-6" /> },
+  { label: 'Clients Served', value: '500+', icon: <Users className="h-6 w-6" /> },
+  { label: 'Properties Sold', value: '300+', icon: <TrendingUp className="h-6 w-6" /> },
+  { label: 'Years Experience', value: '25', icon: <Star className="h-6 w-6" /> },
+]
+
 const staticTestimonials = [
   {
     testimonialId: '1',
@@ -84,10 +113,7 @@ const fadeInSection = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
   },
 }
 
@@ -109,7 +135,6 @@ export const Home = () => {
 
   return (
     <>
-      {/* ===== SEO ===== */}
       <Seo
         title="Trusted Property Solutions Since 1998"
         description="Zain Real Estate offers 100% legal, approved residential, commercial, and industrial properties in Karachi. Over 25 years of trusted service in Mehran Town, Korangi, Hawksbay Scheme 42."
@@ -126,22 +151,17 @@ export const Home = () => {
         url={APP_URL}
       />
 
-      {/* ===== Structured Data ===== */}
       <StructuredData schema={generateOrganizationSchema()} />
       <StructuredData schema={generateBreadcrumbSchema(breadcrumbItems)} />
 
-      {/* ===== Main Content ===== */}
       <div className="overflow-x-hidden">
-        {/* Hero Section */}
+        {/* Hero Section with 5 auto‑rotating slides */}
         <HeroSection
-          title="Secure Your Future with Legally Approved Properties in Karachi"
-          subtitle="25+ years of expertise in Karachi's real estate market. Exclusively dealing in 100% legal, approved, and transferable properties with complete documentation."
+          slides={heroSlides}
           onSearch={(query) => navigate(`/properties?search=${encodeURIComponent(query)}`)}
-          ctaText="Explore Properties"
-          ctaLink="/properties"
+          titleClassName="font-calligraphy"
         />
 
-        {/* Trust Banner */}
         <TrustBanner items={trustItems} className="py-16 md:py-20" />
 
         {/* Featured Properties */}
@@ -395,7 +415,7 @@ export const Home = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full px-8 text-base font-semibold border-white text-white hover:bg-white/10"
+                  className="rounded-full px-8 text-base font-semibold border-white text-white bg-white/10 hover:bg-white/70"
                   asChild
                 >
                   <a href={`tel:${SITE_CONFIG.phone}`}>

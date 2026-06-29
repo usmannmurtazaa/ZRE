@@ -47,7 +47,7 @@ export const Profile = () => {
       }
       await updateUser({ uid: user?.uid || '', data })
       dispatch(showToast({ message: 'Profile updated successfully', type: 'success' }))
-      reset(data) // mark form as pristine after successful save
+      reset(data)
     } catch {
       dispatch(showToast({ message: 'Failed to update profile. Please try again.', type: 'error' }))
     } finally {
@@ -67,7 +67,7 @@ export const Profile = () => {
       >
         {/* Page Heading */}
         <div className="mb-8">
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-neutral-900 tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
             Your Profile
           </h1>
           <p className="mt-2 text-muted-foreground">Keep your personal information up to date.</p>
@@ -81,15 +81,15 @@ export const Profile = () => {
           className="mb-10 flex items-center gap-5"
         >
           <div className="relative inline-flex">
-            <div className="h-20 w-20 rounded-full bg-brand-100 flex items-center justify-center border-4 border-white shadow-md shadow-brand-500/10">
-              <User className="h-10 w-10 text-brand-600" />
+            <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center border-4 border-background shadow-md shadow-primary/10">
+              <User className="h-10 w-10 text-primary" />
             </div>
-            <div className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
+            <div className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-emerald-500 border-2 border-background flex items-center justify-center">
               <CheckCircle className="h-3.5 w-3.5 text-white" />
             </div>
           </div>
           <div>
-            <p className="text-2xl font-serif font-semibold text-neutral-900">
+            <p className="text-2xl font-serif font-semibold text-foreground">
               {user?.displayName || 'User'}
             </p>
             <p className="text-sm text-muted-foreground flex items-center gap-1.5">
@@ -105,12 +105,12 @@ export const Profile = () => {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="space-y-8 bg-white rounded-2xl border border-neutral-200/80 shadow-sm p-6 sm:p-8"
+          className="space-y-8 bg-card rounded-2xl border border-border shadow-card p-6 sm:p-8"
           noValidate
         >
           {/* Display Name */}
           <div className="space-y-2">
-            <Label htmlFor="displayName" className="text-neutral-700 font-medium">
+            <Label htmlFor="displayName" className="text-foreground font-medium">
               Full Name <span className="text-destructive">*</span>
             </Label>
             <div className="relative">
@@ -143,7 +143,7 @@ export const Profile = () => {
 
           {/* Phone Number */}
           <div className="space-y-2">
-            <Label htmlFor="phoneNumber" className="text-neutral-700 font-medium">
+            <Label htmlFor="phoneNumber" className="text-foreground font-medium">
               Phone Number <span className="text-xs text-muted-foreground">(optional)</span>
             </Label>
             <div className="relative">
@@ -165,13 +165,13 @@ export const Profile = () => {
 
           {/* Email (read-only) */}
           <div className="space-y-2">
-            <Label className="text-neutral-700 font-medium">Email Address</Label>
+            <Label className="text-foreground font-medium">Email Address</Label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
               <Input
                 value={user?.email || ''}
                 disabled
-                className="pl-10 bg-neutral-50 text-muted-foreground cursor-not-allowed"
+                className="pl-10 bg-muted text-muted-foreground cursor-not-allowed"
               />
             </div>
             <p className="text-xs text-muted-foreground">
@@ -180,7 +180,7 @@ export const Profile = () => {
           </div>
 
           {/* Save button */}
-          <div className="pt-4 border-t border-neutral-100">
+          <div className="pt-4 border-t border-border">
             <Button
               type="submit"
               disabled={!isDirty || isSaving}

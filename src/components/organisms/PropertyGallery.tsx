@@ -16,7 +16,6 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
-  // Reset index if images change (e.g., new property loaded)
   useEffect(() => {
     setSelectedIndex(0)
   }, [images])
@@ -38,7 +37,6 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
     goTo(selectedIndex - 1)
   }, [selectedIndex, goTo])
 
-  // Keyboard navigation for lightbox
   useEffect(() => {
     if (!lightboxOpen) return
 
@@ -56,7 +54,6 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [lightboxOpen, nextImage, prevImage])
 
-  // Empty state
   if (!images.length) {
     return (
       <div
@@ -106,7 +103,7 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation arrows (only if more than one image) */}
+        {/* Navigation arrows */}
         {totalImages > 1 && (
           <>
             <Button
@@ -150,7 +147,7 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
         )}
       </div>
 
-      {/* Thumbnails */}
+      {/* Thumbnails – border uses the gold token (now metallic blue / green) */}
       {totalImages > 1 && (
         <div
           className="grid grid-cols-4 sm:grid-cols-6 gap-2"
@@ -220,7 +217,6 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
               </motion.div>
             </AnimatePresence>
 
-            {/* Close button */}
             <Button
               variant="ghost"
               size="icon"
@@ -231,7 +227,6 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
               <X className="h-5 w-5" />
             </Button>
 
-            {/* Lightbox navigation arrows */}
             {totalImages > 1 && (
               <>
                 <Button
@@ -255,7 +250,6 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
               </>
             )}
 
-            {/* Lightbox counter */}
             {totalImages > 1 && (
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-medium">
                 {selectedIndex + 1} of {totalImages}

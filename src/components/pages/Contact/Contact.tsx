@@ -62,11 +62,9 @@ export const Contact = () => {
     { name: 'Contact', item: '/contact' },
   ]
 
-  // Your actual Google Maps embed URL (from the iframe you provided)
   const googleMapsEmbedUrl =
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28962.825616415626!2d67.07528829574584!3d24.85178359219301!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33b4edf0d3425%3A0x95fe61b2b27b6ed2!2sZain%20Real%20Estate!5e0!3m2!1sen!2s!4v1782695873011!5m2!1sen!2s'
 
-  // Link to your Google Business Profile (optional – will be added later)
   const googleBusinessProfileUrl = 'https://www.google.com/maps/search/Zain+Real+Estate,+Karachi/'
 
   return (
@@ -87,7 +85,6 @@ export const Contact = () => {
       <StructuredData schema={generateBreadcrumbSchema(breadcrumbItems)} />
 
       <div className="overflow-x-hidden">
-        {/* Hero */}
         <section className="relative bg-gradient-to-br from-primary via-primary/90 to-primary text-primary-foreground py-20 md:py-28 overflow-hidden">
           <div
             className="pointer-events-none absolute inset-0 opacity-[0.04]"
@@ -117,11 +114,9 @@ export const Contact = () => {
           </div>
         </section>
 
-        {/* Main content */}
         <section className="py-16 md:py-24 bg-muted">
           <div className="container px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
-              {/* Contact Info */}
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -176,7 +171,6 @@ export const Contact = () => {
                   <p>Sunday: By Appointment</p>
                 </ContactInfoCard>
 
-                {/* Quick CTA card */}
                 <motion.div
                   variants={itemFadeUp}
                   className="bg-primary/5 rounded-2xl border border-primary/10 p-5 text-center"
@@ -193,7 +187,6 @@ export const Contact = () => {
                   </a>
                 </motion.div>
 
-                {/* Google Business Profile link */}
                 <motion.div variants={itemFadeUp}>
                   <Button variant="outline" className="w-full gap-2 rounded-xl" asChild>
                     <a href={googleBusinessProfileUrl} target="_blank" rel="noopener noreferrer">
@@ -204,7 +197,6 @@ export const Contact = () => {
                 </motion.div>
               </motion.div>
 
-              {/* Contact Form + Map */}
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -218,13 +210,12 @@ export const Contact = () => {
                       Send Us a Message
                     </h2>
                     <p className="text-muted-foreground mb-6">
-                      Fill out the form below and we’ll get back to you promptly.
+                      Fill out the form below and we'll get back to you promptly.
                     </p>
                     <ContactForm />
                   </div>
                 </motion.div>
 
-                {/* Google Maps Embed */}
                 <motion.div variants={itemFadeUp}>
                   <div className="rounded-2xl overflow-hidden border border-border shadow-sm">
                     <iframe

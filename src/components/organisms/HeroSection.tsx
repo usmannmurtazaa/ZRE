@@ -16,7 +16,6 @@ interface HeroSlide {
 
 interface HeroSectionProps {
   slides?: HeroSlide[]
-  /** Kept for backward compatibility – used when `slides` is not provided */
   title?: string
   subtitle?: string
   backgroundImage?: string
@@ -24,9 +23,10 @@ interface HeroSectionProps {
   ctaText?: string
   ctaLink?: string
   className?: string
+  titleClassName?: string
 }
 
-const AUTO_PLAY_DELAY = 6000 // 6 seconds
+const AUTO_PLAY_DELAY = 6000
 
 export const HeroSection = ({
   slides,
@@ -37,8 +37,8 @@ export const HeroSection = ({
   ctaText,
   ctaLink,
   className,
+  titleClassName,
 }: HeroSectionProps) => {
-  // Normalize: either use the slides array or create a single slide from legacy props
   const allSlides: HeroSlide[] =
     slides && slides.length > 0
       ? slides
@@ -58,7 +58,6 @@ export const HeroSection = ({
   const next = useCallback(() => goTo(currentIndex + 1), [currentIndex, goTo])
   const prev = useCallback(() => goTo(currentIndex - 1), [currentIndex, goTo])
 
-  // Autoplay
   useEffect(() => {
     if (isHovered || allSlides.length <= 1) return
     timerRef.current = setInterval(next, AUTO_PLAY_DELAY)
@@ -68,7 +67,7 @@ export const HeroSection = ({
   }, [isHovered, next, allSlides.length])
 
   const currentSlide = allSlides[currentIndex]
-  if (!currentSlide) return null // shouldn't happen
+  if (!currentSlide) return null
 
   return (
     <section
@@ -82,7 +81,6 @@ export const HeroSection = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Background image transitions */}
       <AnimatePresence initial={false}>
         <motion.div
           key={currentIndex}
@@ -104,16 +102,6 @@ export const HeroSection = ({
         </motion.div>
       </AnimatePresence>
 
-      {/* Grain texture overlay */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.03]"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")",
-        }}
-      />
-
-      {/* Navigation arrows */}
       {allSlides.length > 1 && (
         <>
           <button
@@ -133,7 +121,6 @@ export const HeroSection = ({
         </>
       )}
 
-      {/* Content */}
       <div className="container relative z-10 px-4 sm:px-6 lg:px-8 text-center">
         <AnimatePresence mode="wait">
           <motion.div
@@ -144,15 +131,16 @@ export const HeroSection = ({
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="mx-auto max-w-4xl"
           >
-            {/* Title */}
             <h1
-              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-balance"
+              className={cn(
+                'font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-balance',
+                titleClassName
+              )}
               style={{ textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}
             >
               {currentSlide.title}
             </h1>
 
-            {/* Subtitle */}
             <p
               className="mt-6 text-lg md:text-xl lg:text-2xl leading-relaxed text-white/90 max-w-3xl mx-auto text-balance"
               style={{ textShadow: '0 1px 4px rgba(0,0,0,0.2)' }}
@@ -160,7 +148,6 @@ export const HeroSection = ({
               {currentSlide.subtitle}
             </p>
 
-            {/* Search Bar (if onSearch is provided globally) */}
             {onSearch && (
               <div className="mt-10 max-w-2xl mx-auto">
                 <SearchBar
@@ -173,7 +160,6 @@ export const HeroSection = ({
               </div>
             )}
 
-            {/* CTA Button */}
             {currentSlide.ctaText && currentSlide.ctaLink && (
               <div className="mt-8">
                 <Button
@@ -192,7 +178,6 @@ export const HeroSection = ({
         </AnimatePresence>
       </div>
 
-      {/* Dot indicators */}
       {allSlides.length > 1 && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2" role="tablist">
           {allSlides.map((_, index) => (
@@ -213,7 +198,6 @@ export const HeroSection = ({
         </div>
       )}
 
-      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 z-[2] h-16 bg-gradient-to-t from-white/10 to-transparent pointer-events-none" />
     </section>
   )

@@ -54,7 +54,6 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
       )}
 
       <div className="flex items-start gap-4">
-        {/* Avatar with subtle ring */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           transition={springTransition}

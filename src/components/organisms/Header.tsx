@@ -52,19 +52,21 @@ export const Header = () => {
       )}
     >
       <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
+        {/* Logo – favicon + Cinzel Decorative text in fixed Metallic accent */}
         <Link
           to="/"
           className="flex items-center gap-2.5 group shrink-0"
           aria-label="Zain Real Estate – Home"
         >
-          <div className="relative h-9 w-9 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-            <span className="font-serif text-primary-foreground text-lg font-bold leading-none">
-              Z
-            </span>
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-gold-500 border-2 border-background" />
-          </div>
-          <span className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-gold-600 dark:group-hover:text-gold-400">
+          <img
+            src="/favicon.png"
+            alt="Zain Real Estate"
+            className="h-9 w-9 rounded-lg object-contain shadow-sm"
+          />
+          <span
+            className="text-xl sm:text-2xl font-regular tracking-tight text-[#e5b252]"
+            style={{ fontFamily: "'Alata', sans-serif" }}
+          >
             Zain Real Estate
           </span>
         </Link>
@@ -87,7 +89,7 @@ export const Header = () => {
               {location.pathname.startsWith(link.to) && (
                 <motion.div
                   layoutId="nav-indicator"
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-4/5 bg-primary dark:bg-gold-500 rounded-full"
+                  className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-4/5 bg-primary dark:bg-green-500 rounded-full"
                   transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 />
               )}

@@ -82,10 +82,17 @@ export const Login = () => {
         >
           <motion.div variants={fadeUp} className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2.5 group">
-              <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-md">
-                <span className="font-serif text-primary-foreground text-lg font-bold">Z</span>
+              <div className="h-10 w-10 rounded-xl flex items-center justify-center shadow-md">
+                <img
+                  src="/favicon.png"
+                  alt="Zain Real Estate"
+                  className="h-8 w-8 rounded-lg object-contain shadow-sm"
+                />
               </div>
-              <span className="font-serif text-2xl font-semibold text-foreground group-hover:text-gold-600 transition-colors">
+              <span
+                className="text-xl sm:text-2xl font-regular tracking-tight text-[#C6A972]"
+                style={{ fontFamily: "'Alata', sans-serif" }}
+              >
                 Zain Real Estate
               </span>
             </Link>

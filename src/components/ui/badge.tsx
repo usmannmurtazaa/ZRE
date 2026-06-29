@@ -21,7 +21,6 @@ const badgeVariants = cva(
         info: 'border-transparent bg-info text-white hover:bg-info/90',
         subtle: 'border-transparent bg-brand-50 text-brand-700 hover:bg-brand-100',
         earth: 'border-transparent bg-earth-100 text-earth-800 hover:bg-earth-200',
-        // Additional variants for dark mode compatibility will use CSS variable-based colors
       },
       size: {
         sm: 'px-2 py-0 text-xs',

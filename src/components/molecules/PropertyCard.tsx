@@ -42,7 +42,6 @@ export const PropertyCard = ({
           ? 'Sold'
           : property.status
 
-  // Status badge colour variants
   const statusVariant =
     property.status === 'for_sale'
       ? 'default'
@@ -52,7 +51,6 @@ export const PropertyCard = ({
           ? 'outline'
           : 'secondary'
 
-  // Featured badge
   const featuredBadge = property.isFeatured ? (
     <Badge
       variant="outline"
@@ -68,7 +66,6 @@ export const PropertyCard = ({
     onSave?.(property.propertyId)
   }
 
-  // Common content for both variants
   const statusAndFeatured = (
     <div className="flex items-center gap-2 flex-wrap">
       <Badge variant={statusVariant} className="bg-opacity-90">
@@ -122,7 +119,6 @@ export const PropertyCard = ({
         role="article"
         aria-label={`Property: ${property.title}`}
       >
-        {/* Image */}
         <Link
           to={`/properties/${property.slug}`}
           className="sm:w-48 sm:h-full h-48 rounded-lg overflow-hidden shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2"
@@ -136,7 +132,6 @@ export const PropertyCard = ({
           />
         </Link>
 
-        {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -190,7 +185,6 @@ export const PropertyCard = ({
       role="article"
       aria-label={`Property: ${property.title}`}
     >
-      {/* Image section */}
       <Link
         to={`/properties/${property.slug}`}
         className="relative aspect-[4/3] overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2"
@@ -201,11 +195,9 @@ export const PropertyCard = ({
           className="w-full h-full"
           objectFit="cover"
         />
-        {/* Status / Featured badges */}
         <div className="absolute top-3 left-3 flex items-center gap-2 flex-wrap">
           {statusAndFeatured}
         </div>
-        {/* Save button */}
         {onSave && (
           <motion.button
             onClick={handleSaveClick}
@@ -224,7 +216,6 @@ export const PropertyCard = ({
         )}
       </Link>
 
-      {/* Content */}
       <div className="flex flex-col flex-1 p-4">
         <Link to={`/properties/${property.slug}`} tabIndex={-1}>
           <h3 className="font-semibold text-lg leading-tight text-card-foreground hover:text-primary transition-colors line-clamp-2">
@@ -236,7 +227,6 @@ export const PropertyCard = ({
           {priceDisplay}
           <div className="text-xs text-muted-foreground">{sizeAndRooms}</div>
         </div>
-        {/* Micro details for quick scan */}
         <div className="mt-3 flex items-center gap-3 text-xs text-muted-foreground border-t border-border pt-3">
           {property.sizeSqYds && <span>{property.sizeSqYds} sq yd</span>}
           {property.bedrooms && <span>• {property.bedrooms} beds</span>}

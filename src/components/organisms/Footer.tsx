@@ -56,7 +56,7 @@ export const Footer = () => {
       className="relative border-t border-border bg-card text-card-foreground"
       role="contentinfo"
     >
-      {/* Decorative top accent */}
+      {/* Decorative top accent – uses the redefined gold palette (metallic blue / green) */}
       <div className="h-1 bg-gradient-to-r from-gold-500/80 via-gold-400/40 to-gold-500/80" />
 
       <div className="container px-4 sm:px-6 lg:px-8 pt-16 pb-8">
@@ -74,10 +74,16 @@ export const Footer = () => {
               className="flex items-center gap-2.5 group"
               aria-label="Zain Real Estate – Home"
             >
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-sm">
-                <span className="font-serif text-primary-foreground text-base font-bold">Z</span>
-              </div>
-              <span className="font-serif text-xl font-semibold text-foreground group-hover:text-gold-600 dark:group-hover:text-gold-400 transition-colors">
+              {/* Replace the Z badge with the favicon image */}
+              <img
+                src="/favicon.png"
+                alt="Zain Real Estate"
+                className="h-8 w-8 rounded-lg object-contain shadow-sm"
+              />
+              <span
+                className="text-xl sm:text-2xl font-regular tracking-tight text-[#C6A972]"
+                style={{ fontFamily: "'Alata', sans-serif" }}
+              >
                 Zain Real Estate
               </span>
             </Link>
@@ -93,7 +99,7 @@ export const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider mb-5">
+            <h4 className="font-bold text-foreground text-sm uppercase tracking-wider mb-5">
               Quick Links
             </h4>
             <ul className="space-y-2.5">
@@ -118,7 +124,7 @@ export const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider mb-5">
+            <h4 className="font-bold text-foreground text-sm uppercase tracking-wider mb-5">
               Contact
             </h4>
             <ul className="space-y-3">
@@ -144,7 +150,7 @@ export const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider mb-5">
+            <h4 className="font-bold text-foreground text-sm uppercase tracking-wider mb-5">
               Follow Us
             </h4>
             <div className="flex gap-3">

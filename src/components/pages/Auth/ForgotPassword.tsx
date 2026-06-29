@@ -53,12 +53,13 @@ export const ForgotPassword = () => {
         nofollow
       />
 
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 to-white px-4 sm:px-6 lg:px-8 py-12">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted px-4 sm:px-6 lg:px-8 py-12">
         {/* Background pattern */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.03]"
           style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, #162660 1px, transparent 0)',
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)',
             backgroundSize: '24px 24px',
           }}
         />
@@ -75,10 +76,17 @@ export const ForgotPassword = () => {
           {/* Brand */}
           <motion.div variants={fadeUp} className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2.5 group">
-              <div className="h-10 w-10 rounded-xl bg-brand-500 flex items-center justify-center shadow-md">
-                <span className="font-serif text-white text-lg font-bold">Z</span>
+              <div className="h-10 w-10 rounded-xl flex items-center justify-center shadow-md">
+                <img
+                  src="/favicon.png"
+                  alt="Zain Real Estate"
+                  className="h-8 w-8 rounded-lg object-contain shadow-sm"
+                />
               </div>
-              <span className="font-serif text-2xl font-semibold text-brand-500 group-hover:text-brand-600 transition-colors">
+              <span
+                className="text-xl sm:text-2xl font-regular tracking-tight text-[#C6A972]"
+                style={{ fontFamily: "'Alata', sans-serif" }}
+              >
                 Zain Real Estate
               </span>
             </Link>
@@ -87,9 +95,9 @@ export const ForgotPassword = () => {
           {/* Card */}
           <motion.div
             variants={fadeUp}
-            className="rounded-2xl border border-neutral-200/80 bg-white/90 backdrop-blur-md shadow-card p-8"
+            className="rounded-2xl border border-border bg-card shadow-card p-8"
           >
-            <h2 className="font-serif text-2xl font-semibold text-neutral-900 mb-1">
+            <h2 className="font-serif text-2xl font-semibold text-foreground mb-1">
               Reset your password
             </h2>
             <p className="text-sm text-muted-foreground mb-8">
@@ -103,11 +111,11 @@ export const ForgotPassword = () => {
                   initial={{ opacity: 0, y: -8, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -8, height: 0 }}
-                  className="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 p-4 flex items-start gap-3"
+                  className="mb-6 rounded-xl bg-emerald-50 border border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-800 p-4 flex items-start gap-3"
                   role="status"
                 >
-                  <CheckCircle className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <p className="text-sm text-emerald-700">{message}</p>
+                  <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                  <p className="text-sm text-emerald-700 dark:text-emerald-300">{message}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -119,20 +127,20 @@ export const ForgotPassword = () => {
                   initial={{ opacity: 0, y: -8, height: 0 }}
                   animate={{ opacity: 1, y: 0, height: 'auto' }}
                   exit={{ opacity: 0, y: -8, height: 0 }}
-                  className="mb-6 rounded-xl bg-red-50 border border-red-200 p-4 flex items-start gap-3"
+                  className="mb-6 rounded-xl bg-destructive/10 border border-destructive/30 p-4 flex items-start gap-3"
                   role="alert"
                 >
-                  <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">{error}</p>
+                  <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                  <p className="text-sm text-destructive">{error}</p>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Form (hidden after success to encourage checking email, but still present) */}
+            {/* Form */}
             {!message && (
               <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                 <div className="space-y-2">
-                  <Label htmlFor="forgot-email" className="text-neutral-700">
+                  <Label htmlFor="forgot-email" className="text-foreground">
                     Email Address
                   </Label>
                   <div className="relative">
@@ -191,7 +199,7 @@ export const ForgotPassword = () => {
             <div className="mt-6 text-center">
               <Link
                 to="/auth/login"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-600 hover:text-brand-800 transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to sign in

@@ -17,18 +17,16 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
         ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        // ── Luxury Gold variant ──────────────────────────────
+        // ── Gold variant (now uses the redefined gold palette) ──
         gold: 'bg-gold-500 text-brand-900 shadow-sm hover:bg-gold-600 hover:shadow-md dark:text-brand-900 dark:hover:bg-gold-600',
-        // ── Outline Gold variant ────────────────────────────
+        // ── Outline Gold variant ──────────────────────────────
         'outline-gold':
           'border border-gold-500/40 bg-transparent text-gold-600 hover:bg-gold-50 hover:border-gold-500 hover:text-gold-700 dark:text-gold-400 dark:hover:bg-gold-950/30 dark:hover:text-gold-300 dark:hover:border-gold-500',
-        // ── Success variant ──────────────────────────────────
+        // ── Success variant ────────────────────────────────────
         success: 'bg-green-500 text-white shadow-sm hover:bg-green-600 hover:shadow-md',
-        // ── Outline Success variant ──────────────────────────
+        // ── Outline Success variant ────────────────────────────
         'outline-success':
           'border border-green-500/40 bg-transparent text-green-600 hover:bg-green-50 hover:border-green-500 hover:text-green-700 dark:text-green-400 dark:hover:bg-green-950/30 dark:hover:text-green-300 dark:hover:border-green-500',
-        // ── Earth / Warm variant ─────────────────────────────
-        earth: 'bg-earth-500 text-white shadow-sm hover:bg-earth-600 hover:shadow-md',
       },
       size: {
         default: 'h-10 px-4 py-2 rounded-lg',

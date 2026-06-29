@@ -28,17 +28,12 @@ interface NavItem {
   roles?: ('buyer' | 'agent' | 'admin')[]
 }
 
-/**
- * DashboardSidebar – premium, animated sidebar for all user dashboards.
- * Automatically collapses on small screens (toggleable).
- */
 export const DashboardSidebar = () => {
   const { user, logout } = useAuth()
   const location = useLocation()
   const isMobile = useMediaQuery('(max-width: 1023px)')
   const [collapsed, setCollapsed] = useState(isMobile)
 
-  // Sync collapse with mobile state
   useMemo(() => {
     setCollapsed(isMobile)
   }, [isMobile])
@@ -168,7 +163,7 @@ export const DashboardSidebar = () => {
           transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
         }}
         className={cn(
-          'sticky top-16 h-[calc(100vh-4rem)] z-50 flex flex-col border-r border-neutral-200 bg-white/90 backdrop-blur-xl transition-colors',
+          'sticky top-16 h-[calc(100vh-4rem)] z-50 flex flex-col border-r border-border bg-card/90 backdrop-blur-xl transition-colors',
           collapsed && !isMobile && 'items-center',
           isMobile && collapsed && 'w-0 border-none',
           isMobile && !collapsed && 'fixed left-0 top-16 w-[280px] z-50 shadow-2xl'
@@ -179,7 +174,7 @@ export const DashboardSidebar = () => {
           <button
             onClick={() => setCollapsed((prev) => !prev)}
             className={cn(
-              'absolute -right-3.5 top-20 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 bg-white text-muted-foreground shadow-sm hover:text-neutral-800 hover:border-neutral-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              'absolute -right-3.5 top-20 z-10 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground shadow-sm hover:text-foreground hover:border-primary/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
               collapsed && '-right-3.5'
             )}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -192,7 +187,7 @@ export const DashboardSidebar = () => {
         {isMobile && !collapsed && (
           <button
             onClick={() => setCollapsed(true)}
-            className="absolute top-3 right-3 p-2 rounded-lg text-neutral-400 hover:bg-neutral-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="absolute top-3 right-3 p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
@@ -206,19 +201,19 @@ export const DashboardSidebar = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="px-5 py-6 border-b border-neutral-100"
+              className="px-5 py-6 border-b border-border"
             >
               <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10 border-2 border-neutral-100">
+                <Avatar className="h-10 w-10 border-2 border-border">
                   {user?.photoURL ? (
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName ?? ''} />
                   ) : null}
-                  <AvatarFallback className="bg-brand-50 text-brand-600 font-medium text-sm">
+                  <AvatarFallback className="bg-primary/10 text-primary font-medium text-sm">
                     {userInitials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
-                  <p className="truncate font-semibold text-neutral-900 text-sm">
+                  <p className="truncate font-semibold text-foreground text-sm">
                     {user?.displayName || 'User'}
                   </p>
                   <p className="truncate text-xs text-muted-foreground capitalize">
@@ -243,8 +238,8 @@ export const DashboardSidebar = () => {
                 className={cn(
                   'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                   isActive
-                    ? 'bg-brand-50/80 text-brand-700'
-                    : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900',
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   collapsed && !isMobile && 'justify-center px-2'
                 )}
                 title={collapsed ? item.label : undefined}
@@ -253,14 +248,14 @@ export const DashboardSidebar = () => {
                 {isActive && (
                   <motion.div
                     layoutId="sidebar-active"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-brand-500 rounded-r-full"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full"
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   />
                 )}
                 <span
                   className={cn(
                     'shrink-0 transition-colors',
-                    isActive ? 'text-brand-600' : 'text-neutral-400 group-hover:text-neutral-700'
+                    isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
                   )}
                 >
                   {item.icon}
@@ -272,11 +267,11 @@ export const DashboardSidebar = () => {
         </nav>
 
         {/* Logout button */}
-        <div className="border-t border-neutral-100 p-3">
+        <div className="border-t border-border p-3">
           <Button
             variant="ghost"
             className={cn(
-              'w-full justify-start gap-3 px-3 py-2.5 text-sm font-medium text-neutral-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all',
+              'w-full justify-start gap-3 px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all',
               collapsed && !isMobile && 'justify-center px-2'
             )}
             onClick={logout}

@@ -4,9 +4,7 @@ import animate from 'tailwindcss-animate';
 const config: Config = {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  future: {
-    hoverOnlyWhenSupported: true,
-  },
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     container: {
       center: true,
@@ -58,6 +56,7 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card) / <alpha-value>)',
           foreground: 'hsl(var(--card-foreground) / <alpha-value>)',
         },
+        // Brand palette (Metallic Blue in light, Green in dark)
         brand: {
           50: 'hsl(var(--brand-50) / <alpha-value>)',
           100: 'hsl(var(--brand-100) / <alpha-value>)',
@@ -71,6 +70,7 @@ const config: Config = {
           900: 'hsl(var(--brand-900) / <alpha-value>)',
           950: 'hsl(var(--brand-950) / <alpha-value>)',
         },
+        // Accent palette (Metallic / Green) – kept as `gold` for compatibility
         gold: {
           50: 'hsl(var(--gold-50) / <alpha-value>)',
           100: 'hsl(var(--gold-100) / <alpha-value>)',
@@ -150,14 +150,13 @@ const config: Config = {
           DEFAULT: 'hsl(var(--surface) / <alpha-value>)',
           foreground: 'hsl(var(--surface-foreground) / <alpha-value>)',
         },
-        subtle: {
-          DEFAULT: 'hsl(var(--subtle) / <alpha-value>)',
-        },
+        subtle: { DEFAULT: 'hsl(var(--subtle) / <alpha-value>)' },
       },
       fontFamily: {
         sans: ['DM Sans', 'system-ui', '-apple-system', 'sans-serif'],
-        serif: ['Forum', 'Georgia', 'serif'],
-        display: ['Forum', 'serif'],
+        serif: ['Cormorant Garamond', 'Playfair Display', 'Forum', 'Georgia', 'serif'],
+        display: ['Cormorant Garamond', 'Playfair Display', 'Forum', 'serif'],
+        calligraphy: ['Cormorant Garamond', 'cursive'],
       },
       fontSize: {
         '3xs': ['0.625rem', { lineHeight: '1.5', letterSpacing: '0.02em' }],
@@ -192,7 +191,8 @@ const config: Config = {
         inner: 'inset 0 2px 4px 0 rgb(0 0 0 / 0.04)',
         none: '0 0 0 0 rgb(0 0 0 / 0)',
         card: '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 10px 30px -10px rgb(0 0 0 / 0.10)',
-        glow: '0 0 0 3px rgba(198, 169, 114, 0.25)',
+        // Glow uses the accent/ring color (theme‑aware)
+        glow: '0 0 0 3px hsl(var(--ring) / 0.25)',
         button: '0 1px 3px 0 rgb(0 0 0 / 0.06), 0 2px 6px -1px rgb(0 0 0 / 0.04)',
       },
       screens: { xs: '475px', sm: '640px', md: '768px', lg: '1024px', xl: '1280px', '2xl': '1536px' },

@@ -12,16 +12,18 @@ export const StatCard = ({ label, value, icon, className }: StatCardProps) => {
   return (
     <div
       className={cn(
-        'text-center p-6 rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:shadow-md',
+        'group relative flex flex-col items-center justify-center rounded-2xl border border-white/20 dark:border-white/10',
+        'bg-white/50 dark:bg-black/30 backdrop-blur-md p-6 shadow-lg',
+        'transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5',
         className
       )}
     >
       {icon && (
-        <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary">
           {icon}
         </div>
       )}
-      <div className="text-3xl font-serif font-bold text-card-foreground">{value}</div>
+      <div className="font-serif text-4xl font-bold tracking-tight text-foreground">{value}</div>
       <div className="mt-1 text-sm font-medium text-muted-foreground">{label}</div>
     </div>
   )
