@@ -4,7 +4,17 @@ import { StructuredData } from '@/components/atoms/StructuredData'
 import { generateOrganizationSchema, generateBreadcrumbSchema } from '@/lib/seo/schemas'
 import { ContactForm } from '@/components/organisms/ContactForm'
 import { SITE_CONFIG } from '@/lib/constants'
-import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowRight, Building2 } from 'lucide-react'
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  MessageCircle,
+  ArrowRight,
+  Building2,
+  ExternalLink,
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const fadeInSection = {
   hidden: { opacity: 0 },
@@ -51,6 +61,13 @@ export const Contact = () => {
     { name: 'Home', item: '/' },
     { name: 'Contact', item: '/contact' },
   ]
+
+  // Your actual Google Maps embed URL (from the iframe you provided)
+  const googleMapsEmbedUrl =
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28962.825616415626!2d67.07528829574584!3d24.85178359219301!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33b4edf0d3425%3A0x95fe61b2b27b6ed2!2sZain%20Real%20Estate!5e0!3m2!1sen!2s!4v1782695873011!5m2!1sen!2s'
+
+  // Link to your Google Business Profile (optional – will be added later)
+  const googleBusinessProfileUrl = 'https://www.google.com/maps/search/Zain+Real+Estate,+Karachi/'
 
   return (
     <>
@@ -175,15 +192,25 @@ export const Contact = () => {
                     Call our experts <ArrowRight className="h-3.5 w-3.5" />
                   </a>
                 </motion.div>
+
+                {/* Google Business Profile link */}
+                <motion.div variants={itemFadeUp}>
+                  <Button variant="outline" className="w-full gap-2 rounded-xl" asChild>
+                    <a href={googleBusinessProfileUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4" />
+                      View on Google
+                    </a>
+                  </Button>
+                </motion.div>
               </motion.div>
 
-              {/* Contact Form */}
+              {/* Contact Form + Map */}
               <motion.div
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-80px' }}
                 variants={fadeInSection}
-                className="lg:col-span-3"
+                className="lg:col-span-3 space-y-8"
               >
                 <motion.div variants={itemFadeUp}>
                   <div className="bg-card rounded-2xl border border-border shadow-sm p-6 sm:p-8">
@@ -194,6 +221,22 @@ export const Contact = () => {
                       Fill out the form below and we’ll get back to you promptly.
                     </p>
                     <ContactForm />
+                  </div>
+                </motion.div>
+
+                {/* Google Maps Embed */}
+                <motion.div variants={itemFadeUp}>
+                  <div className="rounded-2xl overflow-hidden border border-border shadow-sm">
+                    <iframe
+                      src={googleMapsEmbedUrl}
+                      width="100%"
+                      height="300"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      title="Zain Real Estate Office Location"
+                    />
                   </div>
                 </motion.div>
               </motion.div>

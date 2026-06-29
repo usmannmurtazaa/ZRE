@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/molecules/ThemeToggle'
 import { cn } from '@/lib/helpers/cn'
 import { Menu, X } from 'lucide-react'
+import { useAppSelector } from '@/store/store'
+import { selectAuthUser } from '@/store/slices/authSlice'
 
 const navLinks = [
   { to: '/properties', label: 'Properties' },
@@ -16,6 +18,7 @@ const navLinks = [
 
 export const Header = () => {
   const { user, logout } = useAuth()
+  const reduxUser = useAppSelector(selectAuthUser)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
 
@@ -37,6 +40,8 @@ export const Header = () => {
       /* silent */
     }
   }
+
+  const isAdmin = reduxUser?.role === 'admin'
 
   return (
     <header
@@ -93,6 +98,13 @@ export const Header = () => {
             <ThemeToggle />
             {user ? (
               <>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="outline" size="sm" className="font-semibold">
+                      Admin
+                    </Button>
+                  </Link>
+                )}
                 <Link
                   to="/dashboard"
                   className={cn(
@@ -219,6 +231,21 @@ export const Header = () => {
 
                 {user ? (
                   <>
+                    {isAdmin && (
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2, duration: 0.3 }}
+                      >
+                        <Link
+                          to="/admin"
+                          className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-foreground bg-primary/10 font-semibold"
+                          onClick={toggleMobileMenu}
+                        >
+                          Admin Panel
+                        </Link>
+                      </motion.div>
+                    )}
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -226,7 +253,7 @@ export const Header = () => {
                     >
                       <Link
                         to="/dashboard"
-                        className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="flex items-center px-4 py-3 rounded-xl text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted"
                         onClick={toggleMobileMenu}
                       >
                         Dashboard

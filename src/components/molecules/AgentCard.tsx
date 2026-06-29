@@ -31,7 +31,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
       className={cn(
-        'group relative rounded-2xl border border-neutral-200/70 bg-white/80 backdrop-blur-sm p-6 transition-all duration-300 hover:shadow-card hover:border-brand-200/50',
+        'group relative rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:shadow-card hover:border-gold-500/30',
         isCompact ? 'p-4' : 'p-6',
         className
       )}
@@ -46,7 +46,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
           animate={{ opacity: 1, scale: 1 }}
           className="absolute -top-2.5 right-4 z-10"
         >
-          <Badge className="bg-brand-500/10 text-brand-700 hover:bg-brand-500/20 border-brand-200/50 backdrop-blur-sm font-medium text-xs tracking-wide">
+          <Badge className="bg-gold-500/10 text-gold-700 dark:text-gold-400 hover:bg-gold-500/20 border-gold-200/50 backdrop-blur-sm font-medium text-xs tracking-wide">
             <Award className="w-3.5 h-3.5 mr-1" />
             Top Agent
           </Badge>
@@ -60,9 +60,9 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
           transition={springTransition}
           className="relative shrink-0"
         >
-          <Avatar className="h-20 w-20 border-2 border-neutral-100 ring-2 ring-transparent group-hover:ring-brand-500/20 transition-all duration-300">
+          <Avatar className="h-20 w-20 border-2 border-border ring-2 ring-transparent group-hover:ring-gold-500/20 transition-all duration-300">
             <AvatarImage src={agent.photoURL || undefined} alt={agent.displayName ?? undefined} />
-            <AvatarFallback className="bg-brand-50 text-brand-700 font-serif text-lg">
+            <AvatarFallback className="bg-primary/10 text-primary font-serif text-lg">
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -70,21 +70,21 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
 
         <div className="flex-1 min-w-0">
           <h4
-            className="font-serif text-xl font-semibold text-neutral-900 leading-tight mb-1"
+            className="font-serif text-xl font-semibold text-card-foreground leading-tight mb-1"
             itemProp="name"
           >
             {agent.displayName}
           </h4>
 
           {agent.experienceYears !== undefined && agent.experienceYears > 0 && (
-            <p className="text-sm text-neutral-500 font-medium flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5 text-brand-500/60" />
+            <p className="text-sm text-muted-foreground font-medium flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5 text-gold-500" />
               {agent.experienceYears}+ years of trust
             </p>
           )}
 
           {agent.bio && !isCompact && (
-            <p className="mt-2 text-sm text-neutral-600 line-clamp-2 leading-relaxed">
+            <p className="mt-2 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
               {agent.bio}
             </p>
           )}
@@ -96,7 +96,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 min-w-[90px] border-neutral-200 bg-neutral-50 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 text-neutral-700 transition-all duration-200 group/btn"
+          className="flex-1 min-w-[90px] border-border bg-muted hover:bg-primary/5 hover:border-primary/30 hover:text-primary text-foreground transition-all duration-200 group/btn"
           asChild
         >
           <a
@@ -104,7 +104,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
             aria-label={`Call ${agent.displayName}`}
             className="items-center"
           >
-            <Phone className="w-4 h-4 mr-2 text-brand-500 group-hover/btn:scale-110 transition-transform" />
+            <Phone className="w-4 h-4 mr-2 text-gold-500 group-hover/btn:scale-110 transition-transform" />
             <span className="text-xs font-semibold">Call</span>
           </a>
         </Button>
@@ -112,7 +112,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 min-w-[90px] border-neutral-200 bg-neutral-50 hover:bg-brand-50 hover:border-brand-200 hover:text-brand-700 text-neutral-700 transition-all duration-200 group/btn"
+          className="flex-1 min-w-[90px] border-border bg-muted hover:bg-primary/5 hover:border-primary/30 hover:text-primary text-foreground transition-all duration-200 group/btn"
           asChild
         >
           <a
@@ -120,7 +120,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
             aria-label={`Email ${agent.displayName}`}
             className="items-center"
           >
-            <Mail className="w-4 h-4 mr-2 text-brand-500 group-hover/btn:scale-110 transition-transform" />
+            <Mail className="w-4 h-4 mr-2 text-gold-500 group-hover/btn:scale-110 transition-transform" />
             <span className="text-xs font-semibold">Email</span>
           </a>
         </Button>
@@ -128,7 +128,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 min-w-[90px] border-emerald-200 bg-emerald-50 hover:bg-emerald-100 hover:border-emerald-300 text-emerald-800 transition-all duration-200 group/btn"
+          className="flex-1 min-w-[90px] border-emerald-200 bg-emerald-50 hover:bg-emerald-100 hover:border-emerald-300 text-emerald-800 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/40 transition-all duration-200 group/btn"
           asChild
         >
           <a
@@ -138,7 +138,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
             aria-label={`Chat with ${agent.displayName} on WhatsApp`}
             className="items-center"
           >
-            <MessageCircle className="w-4 h-4 mr-2 text-emerald-600 group-hover/btn:scale-110 transition-transform" />
+            <MessageCircle className="w-4 h-4 mr-2 text-emerald-600 dark:text-emerald-400 group-hover/btn:scale-110 transition-transform" />
             <span className="text-xs font-semibold">WhatsApp</span>
           </a>
         </Button>
@@ -146,7 +146,7 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
 
       {/* Optional social links or additional CTA */}
       {agent.socialLinks && Object.keys(agent.socialLinks).length > 0 && !isCompact && (
-        <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-between">
+        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
           <div className="flex gap-3">
             {Object.entries(agent.socialLinks).map(([platform, url]) =>
               url ? (
@@ -155,18 +155,16 @@ export const AgentCard = ({ agent, className, variant = 'default' }: AgentCardPr
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-neutral-400 hover:text-brand-600 transition-colors"
+                  className="text-muted-foreground hover:text-gold-600 dark:hover:text-gold-400 transition-colors"
                   aria-label={platform}
-                >
-                  {/* You could render icons based on platform if needed */}
-                </a>
+                />
               ) : null
             )}
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs text-brand-600 hover:text-brand-800"
+            className="text-xs text-primary hover:text-gold-600 dark:hover:text-gold-400"
             asChild
           >
             <a href={`/agents/${agent.uid || ''}`}>
