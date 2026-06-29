@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { useAuth } from '@/hooks/useAuth'
+import { useAppSelector } from '@/store/store'
+import { selectAuthUser, selectAuthLoading } from '@/store/slices/authSlice'
 import type { UserRole } from '@/types/auth'
 
 interface RoleGuardProps {
@@ -8,13 +9,13 @@ interface RoleGuardProps {
 }
 
 /**
- * RoleGuard protects routes that require a specific role.
- * After authentication is confirmed, it checks the user's role
- * and redirects unauthorized access to the home page.
- * Displays a polished loading state while auth is initialised.
+ * RoleGuard – protects routes based on the user's role stored in Redux.
+ * If the user is not authenticated or doesn't have the required role,
+ * they are redirected to the homepage.
  */
 export const RoleGuard = ({ allowedRoles }: RoleGuardProps) => {
-  const { user, loading } = useAuth()
+  const user = useAppSelector(selectAuthUser)
+  const loading = useAppSelector(selectAuthLoading)
 
   if (loading) {
     return (
@@ -26,21 +27,18 @@ export const RoleGuard = ({ allowedRoles }: RoleGuardProps) => {
         role="status"
         aria-label="Verifying permissions"
       >
-        <div className="relative">
-          <div className="h-14 w-14 animate-spin rounded-full border-4 border-primary/15 border-t-primary" />
-          <span className="sr-only">Loading permissions…</span>
-        </div>
-        <p className="mt-5 text-sm font-medium text-muted-foreground">Checking authorisation</p>
+        <div className="h-14 w-14 animate-spin rounded-full border-4 border-primary/15 border-t-primary" />
+        <span className="sr-only">Checking permissions…</span>
       </motion.div>
     )
   }
 
+  // No user in Redux → not authenticated (shouldn't reach here if AuthGuard is used)
   if (!user) {
     return <Navigate to="/auth/login" replace />
   }
 
-  if (!allowedRoles.includes((user as any).role as UserRole)) {
-    // Not authorised – redirect to homepage silently
+  if (!allowedRoles.includes(user.role as UserRole)) {
     return <Navigate to="/" replace />
   }
 
