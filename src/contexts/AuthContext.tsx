@@ -39,25 +39,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { toast } = useToast()
   const authReadyRef = useRef(false)
 
+  // Create Firestore user document if it doesn't exist (non‑blocking)
   const ensureUserDocument = useCallback(async (firebaseUser: FirebaseUser) => {
     try {
-      const existingUser = await userService.getUser(firebaseUser.uid)
-      if (!existingUser) {
-        await userService.createUser(firebaseUser.uid, {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          emailVerified: firebaseUser.emailVerified,
-          role: 'buyer',
-          isActive: true,
-        })
-      }
+      await userService.createUser(firebaseUser.uid, {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName,
+        photoURL: firebaseUser.photoURL,
+        emailVerified: firebaseUser.emailVerified,
+        role: 'buyer',
+        isActive: true,
+      })
     } catch (error) {
-      console.error('[Auth] ensureUserDocument error:', error)
+      console.error('[Auth] ensureUserDocument failed, but continuing:', error)
     }
   }, [])
 
+  // Resolve user data for Redux
   const resolveAuthUser = useCallback(
     async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
@@ -71,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             phoneNumber = firestoreUser.phoneNumber ?? null
           }
         } catch (error) {
-          console.error('[Auth] resolveAuthUser error:', error)
+          console.error('[Auth] Failed to fetch user role:', error)
         }
 
         dispatch(

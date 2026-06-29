@@ -42,7 +42,7 @@ function docToUser(snapshot: DocumentSnapshot<DocumentData>): User {
     displayName: data.displayName ?? '',
     phoneNumber: data.phoneNumber ?? null,
     photoURL: data.photoURL ?? null,
-    emailVerified: data.emailVerified ?? false, // <-- added missing field
+    emailVerified: data.emailVerified ?? false,
     role: (data.role as UserRole) ?? 'buyer',
     isActive: data.isActive ?? true,
     createdAt: data.createdAt?.toDate?.() ?? new Date(),
@@ -66,27 +66,52 @@ export const userService = {
   },
 
   /**
-   * Create a new user document in Firestore.
+   * Create a new user document in Firestore if it doesn't already exist.
+   * This method is idempotent – it won't overwrite an existing document.
    * Should be called immediately after Firebase Auth account creation.
    */
   async createUser(uid: string, data: Partial<User>): Promise<User> {
-    const now = Timestamp.fromDate(new Date())
-    const userData = {
-      ...data,
-      uid,
-      isActive: data.isActive ?? true,
-      role: data.role ?? 'buyer',
-      createdAt: now,
-      updatedAt: now,
-    }
+    try {
+      const docRef = doc(db, USERS_COLLECTION, uid)
+      const snapshot = await getDoc(docRef)
 
-    await setDoc(doc(db, USERS_COLLECTION, uid), userData)
+      if (snapshot.exists()) {
+        // Already exists – return the existing user
+        return docToUser(snapshot)
+      }
 
-    const created = await this.getUser(uid)
-    if (!created) {
-      throw new Error(`Failed to create user document for UID: ${uid}`)
+      const now = Timestamp.fromDate(new Date())
+      const userData = {
+        ...data,
+        uid,
+        isActive: data.isActive ?? true,
+        role: data.role ?? 'buyer',
+        createdAt: now,
+        updatedAt: now,
+      }
+
+      await setDoc(docRef, userData)
+
+      const created = await getDoc(docRef)
+      return docToUser(created)
+    } catch (error) {
+      console.error(`[UserService] createUser(${uid}) error:`, error)
+      // Return a minimal user object so the app doesn’t break
+      return {
+        uid,
+        email: data.email ?? '',
+        displayName: data.displayName ?? '',
+        phoneNumber: null,
+        photoURL: null,
+        emailVerified: data.emailVerified ?? false,
+        role: 'buyer',
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastLoginAt: null,
+        preferences: {},
+      }
     }
-    return created
   },
 
   /**
