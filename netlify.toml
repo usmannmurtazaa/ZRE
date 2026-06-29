@@ -15,13 +15,13 @@
 [context.deploy-preview.environment]
   VITE_APP_URL = "https://deploy-preview-${PR_NUMBER}--zainrealestate.netlify.app"
 
-# ── SPA redirect ──────────────────────────────────────────────────────
+# SPA redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# ── Asset caching ─────────────────────────────────────────────────────
+# Asset caching
 [[headers]]
   for = "/assets/*"
   [headers.values]
@@ -32,11 +32,10 @@
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
 
-# ── Security headers ──────────────────────────────────────────────────
+# Security headers (without COOP)
 [[headers]]
   for = "/*"
   [headers.values]
-    Cross-Origin-Opener-Policy = "unsafe-none"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     X-XSS-Protection = "1; mode=block"
