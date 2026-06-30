@@ -157,6 +157,9 @@ const config: Config = {
         serif: ['Cormorant Garamond', 'Playfair Display', 'Forum', 'Georgia', 'serif'],
         display: ['Cormorant Garamond', 'Playfair Display', 'Forum', 'serif'],
         calligraphy: ['Cormorant Garamond', 'cursive'],
+        alata: ['Alata', 'sans-serif'], 
+        dmserifdisplay: ['DM Serif Display', 'serif'],
+        newsreader: ['Newsreader', 'serif'],
       },
       fontSize: {
         '3xs': ['0.625rem', { lineHeight: '1.5', letterSpacing: '0.02em' }],

@@ -75,7 +75,7 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
     <div className={cn('space-y-5', className)}>
       {/* Main image container */}
       <div className="relative overflow-hidden rounded-2xl bg-muted group/main">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           <motion.div
             key={selectedIndex}
             initial={{ opacity: 0 }}
@@ -199,7 +199,7 @@ export const PropertyGallery = ({ images, className }: PropertyGalleryProps) => 
           onPointerDownOutside={() => setLightboxOpen(false)}
         >
           <div className="relative flex items-center justify-center w-full h-full">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={selectedIndex}
                 initial={{ opacity: 0, scale: 0.95 }}

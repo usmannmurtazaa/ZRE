@@ -43,11 +43,12 @@ const LeadDetail = lazy(() => import('./components/pages/Admin/LeadManagement/Le
 const UserList = lazy(() => import('./components/pages/Admin/UserManagement/UserList'))
 const Settings = lazy(() => import('./components/pages/Admin/Settings/Settings'))
 
+// ---------- Area Management (Admin) ----------
+const AreaList = lazy(() => import('./components/pages/Admin/AreaManagement/AreaList'))
+const AreaForm = lazy(() => import('./components/pages/Admin/AreaManagement/AreaForm'))
+
 const NotFound = lazy(() => import('./components/pages/NotFound/NotFound'))
 
-/**
- * Elegant loading screen shown during code-split chunk loading
- */
 function LoadingScreen() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -60,15 +61,10 @@ function LoadingScreen() {
   )
 }
 
-/**
- * Sends GA4 page_view event on every route change
- */
 function PageViewTracker() {
   const location = useLocation()
-
   useEffect(() => {
     try {
-      // Use type assertion to avoid TypeScript error on window.gtag
       const gtag = (window as any).gtag
       if (typeof gtag === 'function') {
         gtag('event', 'page_view', {
@@ -77,10 +73,9 @@ function PageViewTracker() {
         })
       }
     } catch {
-      // Silently fail if analytics not loaded
+      // analytics not available
     }
   }, [location])
-
   return null
 }
 
@@ -103,12 +98,12 @@ export const AppRoutes = () => {
             <Route path="/terms" element={<Terms />} />
           </Route>
 
-          {/* Auth Routes (standalone, no layout) */}
+          {/* Auth Routes */}
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/register" element={<Register />} />
           <Route path="/auth/forgot-password" element={<ForgotPassword />} />
 
-          {/* Protected Routes (authenticated users) */}
+          {/* Protected Routes (authenticated) */}
           <Route element={<AuthGuard />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
@@ -118,7 +113,7 @@ export const AppRoutes = () => {
             </Route>
           </Route>
 
-          {/* Agent Routes (role: agent or admin) */}
+          {/* Agent Routes */}
           <Route element={<AuthGuard />}>
             <Route element={<RoleGuard allowedRoles={['agent', 'admin']} />}>
               <Route element={<Layout />}>
@@ -130,7 +125,7 @@ export const AppRoutes = () => {
             </Route>
           </Route>
 
-          {/* Admin Routes (role: admin) */}
+          {/* Admin Routes (includes Areas) */}
           <Route element={<AuthGuard />}>
             <Route element={<RoleGuard allowedRoles={['admin']} />}>
               <Route element={<Layout />}>
@@ -142,11 +137,15 @@ export const AppRoutes = () => {
                 <Route path="/admin/leads/:id" element={<LeadDetail />} />
                 <Route path="/admin/users" element={<UserList />} />
                 <Route path="/admin/settings" element={<Settings />} />
+                {/* Area Management */}
+                <Route path="/admin/areas" element={<AreaList />} />
+                <Route path="/admin/areas/new" element={<AreaForm />} />
+                <Route path="/admin/areas/:id/edit" element={<AreaForm />} />
               </Route>
             </Route>
           </Route>
 
-          {/* 404 – placed last to catch all unknown routes */}
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

@@ -70,7 +70,7 @@ export const TrustBanner = ({ items, className }: TrustBannerProps) => {
                     {item.icon}
                   </div>
                 )}
-                <div className="font-serif text-4xl font-bold tracking-tight text-foreground">
+                <div className="font-newsreader text-4xl font-semibold tracking-tight text-foreground">
                   {item.value}
                 </div>
                 <div className="mt-1 text-sm font-medium text-muted-foreground">{item.label}</div>

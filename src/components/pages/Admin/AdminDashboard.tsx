@@ -17,6 +17,7 @@ import {
   Settings,
   Building2,
   Inbox,
+  MapPin,
 } from 'lucide-react'
 import { cn } from '@/lib/helpers/cn'
 import { formatPrice } from '@/lib/helpers/currency'
@@ -295,6 +296,7 @@ export const AdminDashboard = () => {
           </motion.div>
         </div>
 
+        {/* Quick actions – now includes Manage Areas */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -305,6 +307,12 @@ export const AdminDashboard = () => {
             <Button variant="outline" size="sm" className="gap-2 rounded-xl">
               <Plus className="h-4 w-4" />
               New Property
+            </Button>
+          </Link>
+          <Link to="/admin/areas">
+            <Button variant="outline" size="sm" className="gap-2 rounded-xl">
+              <MapPin className="h-4 w-4" />
+              Manage Areas
             </Button>
           </Link>
           <Link to="/admin/users">

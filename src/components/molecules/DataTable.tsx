@@ -148,7 +148,7 @@ export const DataTable = <T extends Record<string, unknown>>({
             </tr>
           </thead>
           <tbody>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               {isLoading
                 ? skeletonRows.map((rowIndex) => (
                     <motion.tr

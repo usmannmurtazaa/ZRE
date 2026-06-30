@@ -162,7 +162,7 @@ export const Home = () => {
           titleClassName="font-calligraphy"
         />
 
-        <TrustBanner items={trustItems} className="py-16 md:py-20" />
+        <TrustBanner items={trustItems} className="py-16 md:py-20 font-serif" />
 
         {/* Featured Properties */}
         <section className="py-16 md:py-24 bg-background">

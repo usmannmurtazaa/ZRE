@@ -28,7 +28,7 @@ export const ThemeToggle = () => {
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       >
         <span className="sr-only">{isDark ? 'Switch to light mode' : 'Switch to dark mode'}</span>
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="sync" initial={false}>
           {isDark ? (
             <motion.span
               key="moon"

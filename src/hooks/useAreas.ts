@@ -1,23 +1,17 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { areaService } from '@/services/areaService'
 import type { Area } from '@/types/area'
 
-/**
- * Fetch all areas. Cached for 1 hour as area data is relatively static.
- */
 export const useAreas = () => {
   return useQuery<Area[]>({
     queryKey: ['areas'],
     queryFn: areaService.getAll,
-    staleTime: 60 * 60 * 1000, // 1 hour
+    staleTime: 60 * 60 * 1000,
     refetchOnWindowFocus: false,
-    placeholderData: (previousData) => previousData, // keep previous while refetching
+    placeholderData: (previousData) => previousData,
   })
 }
 
-/**
- * Fetch a single area by its Firestore document ID.
- */
 export const useArea = (id: string | undefined) => {
   return useQuery<Area | null>({
     queryKey: ['area', id],
@@ -27,9 +21,6 @@ export const useArea = (id: string | undefined) => {
   })
 }
 
-/**
- * Fetch a single area by its URL slug.
- */
 export const useAreaBySlug = (slug: string | undefined) => {
   return useQuery<Area | null>({
     queryKey: ['area', 'slug', slug],
@@ -39,6 +30,33 @@ export const useAreaBySlug = (slug: string | undefined) => {
   })
 }
 
-// Re-export for convenience
-const hooks = { useAreas, useArea, useAreaBySlug }
+// ── Area Mutations ──────────────────────────────────────────────────
+
+export const useCreateArea = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Omit<Area, 'areaId' | 'createdAt' | 'updatedAt'>) =>
+      areaService.create({
+        ...data,
+        propertyCount: 0,
+        popularity: 0,
+      } as any),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['areas'] })
+    },
+  })
+}
+
+export const useUpdateArea = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Area> }) => areaService.update(id, data),
+    onSuccess: (_, variables) => {
+      void queryClient.invalidateQueries({ queryKey: ['areas'] })
+      void queryClient.invalidateQueries({ queryKey: ['area', variables.id] })
+    },
+  })
+}
+
+const hooks = { useAreas, useArea, useAreaBySlug, useCreateArea, useUpdateArea }
 export default hooks

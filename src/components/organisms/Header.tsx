@@ -65,7 +65,7 @@ export const Header = () => {
           />
           <span
             className="text-xl sm:text-2xl font-regular tracking-tight text-[#e5b252]"
-            style={{ fontFamily: "'Alata', sans-serif" }}
+            style={{ fontFamily: "'DM Serif Display', serif" }}
           >
             Zain Real Estate
           </span>
@@ -148,7 +148,7 @@ export const Header = () => {
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
           >
-            <AnimatePresence mode="wait" initial={false}>
+            <AnimatePresence mode="sync" initial={false}>
               {mobileMenuOpen ? (
                 <motion.span
                   key="close"

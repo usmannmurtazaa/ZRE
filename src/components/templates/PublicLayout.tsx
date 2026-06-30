@@ -20,7 +20,7 @@ const pageVariants = {
 function PageTransition({ children }: { children: React.ReactNode }) {
   const location = useLocation()
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="sync">
       <motion.div
         key={location.pathname}
         variants={pageVariants}

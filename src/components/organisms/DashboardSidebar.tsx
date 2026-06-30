@@ -19,6 +19,7 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  MapPin,
 } from 'lucide-react'
 
 interface NavItem {
@@ -127,6 +128,12 @@ export const DashboardSidebar = () => {
       roles: ['admin'],
     },
     {
+      label: 'Areas',
+      href: '/admin/areas',
+      icon: <MapPin className="w-5 h-5" />,
+      roles: ['admin'],
+    },
+    {
       label: 'Settings',
       href: '/admin/settings',
       icon: <Settings className="w-5 h-5" />,
@@ -195,7 +202,7 @@ export const DashboardSidebar = () => {
         )}
 
         {/* Profile section (only when expanded) */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
           {!collapsed && (
             <motion.div
               initial={{ opacity: 0 }}

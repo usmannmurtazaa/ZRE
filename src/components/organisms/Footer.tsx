@@ -81,14 +81,16 @@ export const Footer = () => {
                 className="h-8 w-8 rounded-lg object-contain shadow-sm"
               />
               <span
-                className="text-xl sm:text-2xl font-regular tracking-tight text-[#C6A972]"
-                style={{ fontFamily: "'Alata', sans-serif" }}
+                className="text-xl sm:text-2xl font-regular tracking-tight text-[#e5b252]"
+                style={{ fontFamily: "'DM Serif Display', serif" }}
               >
                 Zain Real Estate
               </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              {SITE_CONFIG.tagline}
+              Your trusted real estate partner in Karachi since 2000. We specialise in 100% legal,
+              approved, and transferable residential, commercial, and industrial properties, helping
+              families and investors buy with confidence, complete transparency, and peace of mind.
             </p>
           </motion.div>
 

@@ -290,7 +290,7 @@ const Properties = () => {
                 </div>
               )}
 
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="sync">
                 {isLoading ? (
                   <motion.div
                     key="loading"
