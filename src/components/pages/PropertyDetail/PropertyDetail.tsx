@@ -6,7 +6,6 @@ import { motion } from 'framer-motion'
 import { usePropertyBySlug, useIncrementPropertyViews } from '@/hooks/useProperties'
 import { useAreas } from '@/hooks/useAreas'
 import { PropertyGallery } from '@/components/organisms/PropertyGallery'
-import { AgentCard } from '@/components/molecules/AgentCard'
 import { ContactForm } from '@/components/organisms/ContactForm'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -21,6 +20,7 @@ import { StructuredData } from '@/components/atoms/StructuredData'
 import { generatePropertySchema, generateBreadcrumbSchema } from '@/lib/seo/schemas'
 import { formatPrice } from '@/lib/helpers/currency'
 import { cn } from '@/lib/helpers/cn'
+import { SITE_CONFIG } from '@/lib/constants'
 import {
   MapPin,
   Maximize2,
@@ -30,6 +30,7 @@ import {
   Share2,
   Eye,
   Phone,
+  Mail,
   MessageCircle,
   Calendar,
   Check,
@@ -431,16 +432,46 @@ export const PropertyDetail = () => {
               transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-6"
             >
-              {/* Agent Card */}
-              <AgentCard
-                agent={{
-                  ...(property.agentId as any),
-                  displayName: property.agentName,
-                  email: property.contactEmail,
-                  phoneNumber: property.contactPhone,
-                  photoURL: property.agentPhoto || undefined,
-                }}
-              />
+              {/* ── Contact Info Card (replaces AgentCard) ─────────── */}
+              <div className="rounded-2xl border border-border bg-card p-5 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground text-sm">
+                      Contact Zain Real Estate
+                    </h4>
+                    <p className="text-xs text-muted-foreground">Call or message us directly</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <a
+                    href={`tel:${SITE_CONFIG.phone}`}
+                    className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Phone className="h-4 w-4 text-gold-500" />
+                    {SITE_CONFIG.phone}
+                  </a>
+                  <a
+                    href={`mailto:${SITE_CONFIG.email}`}
+                    className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Mail className="h-4 w-4 text-gold-500" />
+                    {SITE_CONFIG.email}
+                  </a>
+                  <a
+                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <MessageCircle className="h-4 w-4 text-gold-500" />
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
 
               {/* Quick contact CTA */}
               <div className="flex gap-2">
@@ -449,7 +480,7 @@ export const PropertyDetail = () => {
                   className="flex-1 rounded-xl gap-2 border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400 dark:hover:bg-emerald-900/40 transition-colors"
                   asChild
                 >
-                  <a href={`tel:${property.contactPhone}`}>
+                  <a href={`tel:${SITE_CONFIG.phone}`}>
                     <Phone className="h-4 w-4" />
                     Call Now
                   </a>
@@ -459,7 +490,7 @@ export const PropertyDetail = () => {
                   asChild
                 >
                   <a
-                    href={`https://wa.me/${property.contactPhone?.replace(/[^0-9]/g, '')}`}
+                    href={`https://wa.me/${SITE_CONFIG.whatsappNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

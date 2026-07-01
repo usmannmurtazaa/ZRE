@@ -1,336 +1,561 @@
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { useState, useMemo, useCallback, useEffect, useRef, lazy, Suspense } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { useProperties } from '@/hooks/useProperties'
 import { useAllLeads } from '@/hooks/useLeads'
 import { useUsers } from '@/hooks/useUsers'
-import { KpiCard } from '@/components/organisms/KpiCard'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { useAreas } from '@/hooks/useAreas'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Seo } from '@/components/atoms/Seo'
-import {
-  Home,
-  Users,
-  MessageSquare,
-  ArrowRight,
-  Plus,
-  Settings,
-  Building2,
-  Inbox,
-  MapPin,
-} from 'lucide-react'
+import DashboardSidebar from './DashboardSidebar'
+import DashboardHeader from './DashboardHeader'
+import { X, Search, Command, Menu } from 'lucide-react'
 import { cn } from '@/lib/helpers/cn'
-import { formatPrice } from '@/lib/helpers/currency'
-import { formatDate } from '@/lib/helpers/date'
 import type { Lead } from '@/types'
+import type { Property } from '@/types/property'
 
-const fadeInSection = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+// Lazy-loaded content sections
+const DashboardOverview = lazy(() => import('./DashboardOverview'))
+const DashboardAnalytics = lazy(() => import('./DashboardAnalytics'))
+const PropertyInsights = lazy(() => import('./PropertyInsights'))
+const LeadInsights = lazy(() => import('./LeadInsights'))
+const AreaInsights = lazy(() => import('./AreaInsights'))
+const RecentActivity = lazy(() => import('./RecentActivity'))
+const QuickActions = lazy(() => import('./QuickActions'))
+
+type Section =
+  | 'overview'
+  | 'analytics'
+  | 'property-insights'
+  | 'lead-insights'
+  | 'area-insights'
+  | 'recent-activity'
+  | 'quick-actions'
+
+// ----------------------------------------------------------------------
+// Helper functions
+// ----------------------------------------------------------------------
+function isWithinDays(date: Date, days: number): boolean {
+  const now = new Date()
+  const past = new Date(now.getFullYear(), now.getMonth(), now.getDate() - days)
+  return date >= past
 }
 
-const itemFadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
+function groupByMonth<T extends { createdAt: Date }>(
+  items: T[]
+): { month: string; count: number }[] {
+  const map = new Map<string, number>()
+  items.forEach((item) => {
+    const d = item.createdAt
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    map.set(key, (map.get(key) ?? 0) + 1)
+  })
+  return Array.from(map.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([month, count]) => ({ month, count }))
+    .slice(-12)
 }
 
-const statusVariants: Record<string, string> = {
-  new: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800',
-  contacted:
-    'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800',
-  qualified:
-    'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800',
-  converted:
-    'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800',
-  lost: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800',
+function formatMonthKey(key: string): string {
+  const [y, m] = key.split('-')
+  const date = new Date(Number(y), Number(m) - 1, 1)
+  return date.toLocaleDateString('en-PK', { month: 'short', year: '2-digit' })
 }
 
-export const AdminDashboard = () => {
-  const { data: propertiesData, isLoading: propsLoading } = useProperties({ limit: 5, page: 1 })
+// ----------------------------------------------------------------------
+// Component
+// ----------------------------------------------------------------------
+export default function AdminDashboard() {
+  const navigate = useNavigate()
+
+  // ----- Firestore data hooks -----
+  const { data: propertiesData, isLoading: propsLoading } = useProperties({ limit: 200, page: 1 })
   const { data: leads, isLoading: leadsLoading } = useAllLeads()
   const { data: users, isLoading: usersLoading } = useUsers()
+  const { data: areas, isLoading: areasLoading } = useAreas()
 
-  const totalProperties = propertiesData?.total ?? 0
-  const totalLeads = leads?.length ?? 0
-  const totalUsers = users?.length ?? 0
-  const newLeads = leads?.filter((l: Lead) => l.status === 'new').length ?? 0
+  const properties = propertiesData?.items ?? []
+  const allLeads = leads ?? []
+  const allUsers = users ?? []
+  const allAreas = areas ?? []
 
-  const isLoading = propsLoading || leadsLoading || usersLoading
+  // ----- UI State -----
+  const [period, setPeriod] = useState<'7d' | '30d' | '90d' | 'all'>('30d')
+  const [activeSection, setActiveSection] = useState<Section>('overview')
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const searchInputRef = useRef<HTMLInputElement>(null)
 
-  const kpiData = [
-    {
-      title: 'Total Properties',
-      value: totalProperties,
-      icon: <Home className="h-6 w-6" />,
-      description: 'Active & inactive',
-      trend: undefined as { value: number; isPositive: boolean } | undefined,
-      to: '/admin/properties',
+  // ----- Date filtering -----
+  const filterByPeriod = useCallback(
+    <T extends { createdAt: Date }>(items: T[]): T[] => {
+      if (period === 'all') return items
+      const days = period === '7d' ? 7 : period === '30d' ? 30 : 90
+      return items.filter((item) => isWithinDays(item.createdAt, days))
     },
-    {
-      title: 'Total Leads',
-      value: totalLeads,
-      icon: <MessageSquare className="h-6 w-6" />,
-      description: 'All inquiries',
-      trend: undefined,
-      to: '/admin/leads',
-    },
-    {
-      title: 'New Leads',
-      value: newLeads,
-      icon: <Inbox className="h-6 w-6" />,
-      description: 'Awaiting action',
-      trend:
-        totalLeads > 0
-          ? { value: Math.round((newLeads / totalLeads) * 100), isPositive: true }
-          : undefined,
-      to: '/admin/leads?status=new',
-    },
-    {
-      title: 'Total Users',
-      value: totalUsers,
-      icon: <Users className="h-6 w-6" />,
-      description: 'Registered accounts',
-      trend: undefined,
-      to: '/admin/users',
-    },
-  ]
+    [period]
+  )
 
-  const recentProperties = propertiesData?.items?.slice(0, 5) || []
-  const recentLeads = leads?.slice(0, 5) || []
+  const filteredProperties = useMemo(() => filterByPeriod(properties), [properties, filterByPeriod])
+  const filteredLeads = useMemo(() => filterByPeriod(allLeads), [allLeads, filterByPeriod])
+  const filteredUsers = useMemo(() => filterByPeriod(allUsers), [allUsers, filterByPeriod])
+  const filteredAreas = useMemo(() => filterByPeriod(allAreas), [allAreas, filterByPeriod])
+
+  // ----- Derived metrics -----
+  const activeProperties = useMemo(
+    () => filteredProperties.filter((p) => p.status !== 'sold' && p.status !== 'rented').length,
+    [filteredProperties]
+  )
+  const soldProperties = useMemo(
+    () => filteredProperties.filter((p) => p.status === 'sold').length,
+    [filteredProperties]
+  )
+  const featuredProperties = useMemo(
+    () => filteredProperties.filter((p) => p.isFeatured).length,
+    [filteredProperties]
+  )
+  const newLeads = useMemo(
+    () => filteredLeads.filter((l) => l.status === 'new').length,
+    [filteredLeads]
+  )
+  const leadsToday = useMemo(
+    () => filteredLeads.filter((l) => isWithinDays(l.createdAt, 1)).length,
+    [filteredLeads]
+  )
+  const thisMonthLeads = useMemo(() => {
+    const now = new Date()
+    return filteredLeads.filter(
+      (l) =>
+        l.createdAt.getMonth() === now.getMonth() && l.createdAt.getFullYear() === now.getFullYear()
+    ).length
+  }, [filteredLeads])
+
+  const portfolioValue = useMemo(
+    () => filteredProperties.reduce((sum, p) => sum + (p.price || 0), 0),
+    [filteredProperties]
+  )
+  const avgPrice = useMemo(() => {
+    const active = filteredProperties.filter((p) => p.status !== 'sold')
+    return active.length
+      ? Math.round(active.reduce((sum, p) => sum + (p.price || 0), 0) / active.length)
+      : 0
+  }, [filteredProperties])
+
+  // Property insights
+  const highestPriceProp = useMemo(
+    () =>
+      filteredProperties.reduce(
+        (max, p) => (p.price > (max?.price || 0) ? p : max),
+        undefined as Property | undefined
+      ),
+    [filteredProperties]
+  )
+  const lowestPriceProp = useMemo(
+    () =>
+      filteredProperties.reduce(
+        (min, p) => (p.price < (min?.price || Infinity) ? p : min),
+        undefined as Property | undefined
+      ),
+    [filteredProperties]
+  )
+  const oldestUnsoldProp = useMemo(() => {
+    const unsold = filteredProperties.filter((p) => p.status !== 'sold' && p.status !== 'rented')
+    return unsold.length
+      ? unsold.reduce((old, p) => (p.createdAt < old.createdAt ? p : old))
+      : undefined
+  }, [filteredProperties])
+
+  // Area insights
+  const areaWithMostProps = useMemo(() => {
+    const map = new Map<string, number>()
+    filteredProperties.forEach((p) => map.set(p.area, (map.get(p.area) || 0) + 1))
+    if (map.size === 0) return null
+    const sorted = Array.from(map.entries()).sort((a, b) => b[1] - a[1])
+    const first = sorted[0]
+    if (!first) return null
+    return { name: first[0], count: first[1] }
+  }, [filteredProperties])
+
+  const areaWithHighestAvg = useMemo(() => {
+    const map = new Map<string, { total: number; count: number }>()
+    filteredProperties.forEach((p) => {
+      if (!p.area) return
+      const cur = map.get(p.area) || { total: 0, count: 0 }
+      cur.total += p.price || 0
+      cur.count += 1
+      map.set(p.area, cur)
+    })
+    if (map.size === 0) return null
+    let bestArea = ''
+    let bestAvg = 0
+    map.forEach((v, k) => {
+      const avg = v.total / v.count
+      if (avg > bestAvg) {
+        bestAvg = avg
+        bestArea = k
+      }
+    })
+    return { name: bestArea, avg: Math.round(bestAvg) }
+  }, [filteredProperties])
+
+  // Lead status distribution
+  const leadStatusCounts = useMemo(() => {
+    const map: Record<string, number> = {}
+    filteredLeads.forEach((l) => (map[l.status] = (map[l.status] ?? 0) + 1))
+    return map
+  }, [filteredLeads])
+
+  // Monthly charts
+  const monthlyLeads = useMemo(() => groupByMonth(filteredLeads), [filteredLeads])
+  const monthlyProperties = useMemo(() => groupByMonth(filteredProperties), [filteredProperties])
+
+  // Property status distribution
+  const propertyStatusCounts = useMemo(() => {
+    const map: Record<string, number> = {}
+    filteredProperties.forEach((p) => (map[p.status] = (map[p.status] ?? 0) + 1))
+    return map
+  }, [filteredProperties])
+
+  // Properties by area
+  const propertyByArea = useMemo(() => {
+    const map: Record<string, number> = {}
+    filteredProperties.forEach((p) => {
+      const a = p.area || 'Unknown'
+      map[a] = (map[a] || 0) + 1
+    })
+    return Object.entries(map).sort((a, b) => b[1] - a[1])
+  }, [filteredProperties])
+
+  // Property type distribution
+  const residentialCount = useMemo(
+    () => filteredProperties.filter((p) => p.type === 'residential').length,
+    [filteredProperties]
+  )
+  const commercialCount = useMemo(
+    () => filteredProperties.filter((p) => p.type === 'commercial').length,
+    [filteredProperties]
+  )
+  const industrialCount = useMemo(
+    () => filteredProperties.filter((p) => p.type === 'industrial').length,
+    [filteredProperties]
+  )
+
+  // Activity feed
+  const activityFeed = useMemo(() => {
+    const feed: {
+      id: string
+      type: string
+      action: string
+      label: string
+      timestamp: Date
+      status?: string
+      link?: string
+    }[] = []
+
+    filteredProperties.forEach((p) => {
+      feed.push({
+        id: `prop-${p.propertyId}`,
+        type: 'property',
+        action: 'Property Added',
+        label: p.title,
+        timestamp: p.createdAt,
+        link: `/admin/properties/${p.propertyId}/edit`,
+      })
+      if (p.updatedAt > p.createdAt) {
+        feed.push({
+          id: `prop-upd-${p.propertyId}`,
+          type: 'property',
+          action: 'Property Updated',
+          label: p.title,
+          timestamp: p.updatedAt,
+          status: p.status,
+          link: `/admin/properties/${p.propertyId}/edit`,
+        })
+      }
+    })
+
+    filteredLeads.forEach((l) => {
+      feed.push({
+        id: `lead-${l.leadId}`,
+        type: 'lead',
+        action: 'New Lead',
+        label: l.name,
+        timestamp: l.createdAt,
+        status: l.status,
+        link: `/admin/leads/${l.leadId}`,
+      })
+    })
+
+    filteredUsers.forEach((u) => {
+      feed.push({
+        id: `user-${u.uid}`,
+        type: 'user',
+        action: 'User Registered',
+        label: u.displayName || u.email || 'Unknown User',
+        timestamp: u.createdAt,
+        link: `/admin/users`,
+      })
+    })
+
+    // Areas: use areaId, name, or fallback to index
+    filteredAreas.forEach((a, index) => {
+      const areaId = (a as any).areaId || a.name || `area-fallback-${index}`
+      feed.push({
+        id: `area-${areaId}`,
+        type: 'area',
+        action: 'Area Added',
+        label: a.name || 'Unnamed Area',
+        timestamp: (a as any).createdAt || new Date(),
+        link: `/admin/areas`,
+      })
+    })
+
+    feed.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+    return feed.slice(0, 15)
+  }, [filteredProperties, filteredLeads, filteredUsers, filteredAreas])
+
+  // Global search
+  const searchData = useMemo(() => {
+    const items: { label: string; link: string; type: string }[] = []
+    properties.forEach((p) =>
+      items.push({
+        label: p.title,
+        link: `/admin/properties/${p.propertyId}/edit`,
+        type: 'Property',
+      })
+    )
+    allLeads.forEach((l) =>
+      items.push({ label: l.name, link: `/admin/leads/${l.leadId}`, type: 'Lead' })
+    )
+    allUsers.forEach((u) =>
+      items.push({
+        label: u.displayName || u.email || 'Unknown User',
+        link: `/admin/users`,
+        type: 'User',
+      })
+    )
+    allAreas.forEach((a) => items.push({ label: a.name, link: `/admin/areas`, type: 'Area' }))
+    return items
+  }, [properties, allLeads, allUsers, allAreas])
+
+  const filteredSearch = useMemo(() => {
+    if (!searchQuery.trim()) return []
+    const q = searchQuery.toLowerCase()
+    return searchData.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 8)
+  }, [searchData, searchQuery])
+
+  // ⌘K shortcut
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || e.key === '/') {
+        e.preventDefault()
+        setSearchOpen((prev) => !prev)
+      }
+    }
+    document.addEventListener('keydown', down)
+    return () => document.removeEventListener('keydown', down)
+  }, [])
+
+  const isLoading = propsLoading || leadsLoading || usersLoading || areasLoading
+
+  // Props for each section
+  const sectionProps = {
+    period,
+    setPeriod,
+    isLoading,
+    filteredProperties,
+    filteredLeads,
+    filteredUsers,
+    filteredAreas,
+    activeProperties,
+    soldProperties,
+    featuredProperties,
+    newLeads,
+    leadsToday,
+    thisMonthLeads,
+    portfolioValue,
+    avgPrice,
+    highestPriceProp,
+    lowestPriceProp,
+    oldestUnsoldProp,
+    areaWithMostProps,
+    areaWithHighestAvg,
+    leadStatusCounts,
+    monthlyLeads,
+    monthlyProperties,
+    propertyStatusCounts,
+    propertyByArea,
+    residentialCount,
+    commercialCount,
+    industrialCount,
+    activityFeed,
+    allProperties: properties,
+    allLeads,
+    allUsers,
+    allAreas,
+  }
 
   return (
     <>
       <Seo title="Admin Dashboard" description="Platform administration" noindex nofollow />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <motion.div initial="hidden" animate="visible" variants={fadeInSection} className="mb-10">
-          <motion.div
-            variants={itemFadeUp}
-            className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4"
-          >
-            <div>
-              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground tracking-tight flex items-center gap-3">
-                <Settings className="h-8 w-8 text-primary" />
-                Admin Dashboard
-              </h1>
-              <p className="mt-2 text-muted-foreground">
-                Overview of your entire platform &middot; Last updated just now
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Link to="/admin/properties/new">
-                <Button size="sm" className="gap-2 rounded-xl">
-                  <Plus className="h-4 w-4" />
-                  Add Property
-                </Button>
-              </Link>
-              <Link to="/admin/settings">
-                <Button variant="outline" size="sm" className="gap-2 rounded-xl">
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
-        </motion.div>
+      <div className="flex h-full min-h-screen bg-background">
+        {/* Desktop Sidebar */}
+        <DashboardSidebar
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+          className="hidden lg:flex"
+        />
 
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-32 rounded-2xl" />
-            ))}
-          </div>
-        ) : (
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeInSection}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10"
-          >
-            {kpiData.map((kpi) => (
-              <motion.div key={kpi.title} variants={itemFadeUp}>
-                <Link to={kpi.to}>
-                  <KpiCard
-                    title={kpi.title}
-                    value={kpi.value}
-                    icon={kpi.icon}
-                    description={kpi.description}
-                    trend={kpi.trend}
-                    className="hover:shadow-md transition-shadow cursor-pointer"
-                  />
-                </Link>
+        {/* Mobile Sidebar Drawer */}
+        <AnimatePresence>
+          {mobileSidebarOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+                onClick={() => setMobileSidebarOpen(false)}
+              />
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className="fixed left-0 top-0 z-50 h-full w-64 bg-card border-r border-border lg:hidden"
+              >
+                <div className="flex justify-end p-4">
+                  <button
+                    onClick={() => setMobileSidebarOpen(false)}
+                    className="p-2 rounded-full hover:bg-muted"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <DashboardSidebar
+                  activeSection={activeSection}
+                  onSectionChange={(section) => {
+                    setActiveSection(section)
+                    setMobileSidebarOpen(false)
+                  }}
+                />
               </motion.div>
-            ))}
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Header with mobile hamburger */}
+          <header className="border-b border-border bg-card px-4 sm:px-6 py-4">
+            <div className="flex items-center gap-2 mb-4">
+              <button
+                onClick={() => setMobileSidebarOpen(true)}
+                className="p-2 rounded-lg bg-muted hover:bg-muted/80 lg:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+                Dashboard
+              </h1>
+            </div>
+            <DashboardHeader
+              onSearchOpen={() => setSearchOpen(true)}
+              period={period}
+              setPeriod={setPeriod}
+            />
+          </header>
+
+          {/* Content area */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSection}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25 }}
+              >
+                <Suspense fallback={<Skeleton className="h-96 rounded-2xl" />}>
+                  {activeSection === 'overview' && <DashboardOverview {...sectionProps} />}
+                  {activeSection === 'analytics' && <DashboardAnalytics {...sectionProps} />}
+                  {activeSection === 'property-insights' && <PropertyInsights {...sectionProps} />}
+                  {activeSection === 'lead-insights' && <LeadInsights {...sectionProps} />}
+                  {activeSection === 'area-insights' && <AreaInsights {...sectionProps} />}
+                  {activeSection === 'recent-activity' && <RecentActivity {...sectionProps} />}
+                  {activeSection === 'quick-actions' && <QuickActions />}
+                </Suspense>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      {/* Global Search Modal */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-black/40 backdrop-blur-sm"
+            onClick={() => setSearchOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: -20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: -20 }}
+              className="w-full max-w-md mx-4 bg-card rounded-2xl shadow-2xl border border-border overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center border-b border-border px-4 py-3">
+                <Search className="h-5 w-5 text-muted-foreground mr-2" />
+                <input
+                  ref={searchInputRef}
+                  autoFocus
+                  type="text"
+                  placeholder="Search properties, leads, areas..."
+                  className="flex-1 bg-transparent border-0 outline-none text-foreground placeholder:text-muted-foreground"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button
+                  onClick={() => setSearchOpen(false)}
+                  className="p-1 rounded-full hover:bg-muted"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="max-h-64 overflow-y-auto p-2">
+                {filteredSearch.length === 0 && searchQuery ? (
+                  <p className="text-sm text-muted-foreground p-4 text-center">No results found.</p>
+                ) : (
+                  filteredSearch.map((item) => (
+                    <button
+                      key={item.link + item.label}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-muted flex items-center gap-2 transition"
+                      onClick={() => {
+                        navigate(item.link)
+                        setSearchOpen(false)
+                        setSearchQuery('')
+                      }}
+                    >
+                      <span className="text-xs text-muted-foreground uppercase w-16">
+                        {item.type}
+                      </span>
+                      <span className="truncate">{item.label}</span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </motion.div>
           </motion.div>
         )}
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <motion.div initial="hidden" animate="visible" variants={fadeInSection}>
-            <motion.div
-              variants={itemFadeUp}
-              className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden"
-            >
-              <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-                <div>
-                  <h2 className="font-serif text-lg font-semibold text-card-foreground flex items-center gap-2">
-                    <Building2 className="h-5 w-5 text-primary" />
-                    Recent Properties
-                  </h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Latest additions to your catalogue
-                  </p>
-                </div>
-                <Link
-                  to="/admin/properties"
-                  className="text-sm font-medium text-primary hover:text-primary/80 dark:hover:text-gold-400 flex items-center gap-1 transition-colors"
-                >
-                  View all <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-              <div className="px-2 py-2">
-                {propsLoading ? (
-                  <div className="space-y-3 p-4">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <Skeleton key={i} className="h-14 rounded-xl" />
-                    ))}
-                  </div>
-                ) : recentProperties.length > 0 ? (
-                  recentProperties.map((property) => (
-                    <Link
-                      key={property.propertyId}
-                      to={`/admin/properties/${property.propertyId}/edit`}
-                      className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-muted transition-colors"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-card-foreground truncate">
-                          {property.title}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {property.area} &middot; {formatPrice(property.price)}
-                        </p>
-                      </div>
-                      <Badge variant="outline" className="capitalize text-xs ml-3">
-                        {property.status?.replace('_', ' ')}
-                      </Badge>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Building2 className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
-                    <p className="text-sm">No properties yet</p>
-                    <Link
-                      to="/admin/properties/new"
-                      className="text-primary text-xs font-medium hover:underline mt-1 inline-block"
-                    >
-                      Add your first property
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-
-          <motion.div initial="hidden" animate="visible" variants={fadeInSection}>
-            <motion.div
-              variants={itemFadeUp}
-              className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden"
-            >
-              <div className="flex items-center justify-between px-6 py-5 border-b border-border">
-                <div>
-                  <h2 className="font-serif text-lg font-semibold text-card-foreground flex items-center gap-2">
-                    <MessageSquare className="h-5 w-5 text-primary" />
-                    Recent Leads
-                  </h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Latest inquiries across all properties
-                  </p>
-                </div>
-                <Link
-                  to="/admin/leads"
-                  className="text-sm font-medium text-primary hover:text-primary/80 dark:hover:text-gold-400 flex items-center gap-1 transition-colors"
-                >
-                  View all <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-              <div className="px-2 py-2">
-                {leadsLoading ? (
-                  <div className="space-y-3 p-4">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                      <Skeleton key={i} className="h-14 rounded-xl" />
-                    ))}
-                  </div>
-                ) : recentLeads.length > 0 ? (
-                  recentLeads.map((lead) => (
-                    <Link
-                      key={lead.leadId}
-                      to={`/admin/leads/${lead.leadId}`}
-                      className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-muted transition-colors"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-card-foreground truncate">{lead.name}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {lead.propertyTitle || 'General Inquiry'} &middot;{' '}
-                          {formatDate(lead.createdAt)}
-                        </p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          'capitalize text-xs ml-3',
-                          statusVariants[lead.status] ||
-                            'bg-muted text-muted-foreground border-border'
-                        )}
-                      >
-                        {lead.status}
-                      </Badge>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Inbox className="h-8 w-8 mx-auto mb-2 text-muted-foreground/40" />
-                    <p className="text-sm">No leads received yet</p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Quick actions – now includes Manage Areas */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-8 flex flex-wrap gap-3"
-        >
-          <Link to="/admin/properties/new">
-            <Button variant="outline" size="sm" className="gap-2 rounded-xl">
-              <Plus className="h-4 w-4" />
-              New Property
-            </Button>
-          </Link>
-          <Link to="/admin/areas">
-            <Button variant="outline" size="sm" className="gap-2 rounded-xl">
-              <MapPin className="h-4 w-4" />
-              Manage Areas
-            </Button>
-          </Link>
-          <Link to="/admin/users">
-            <Button variant="outline" size="sm" className="gap-2 rounded-xl">
-              <Users className="h-4 w-4" />
-              Manage Users
-            </Button>
-          </Link>
-          <Link to="/admin/settings">
-            <Button variant="outline" size="sm" className="gap-2 rounded-xl">
-              <Settings className="h-4 w-4" />
-              Site Settings
-            </Button>
-          </Link>
-        </motion.div>
-      </div>
+      </AnimatePresence>
     </>
   )
 }
-
-export default AdminDashboard
